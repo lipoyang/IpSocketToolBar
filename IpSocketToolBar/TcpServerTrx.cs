@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net; // IPAddress, IPEndPoint
 using System.Net.Sockets; //TcpListener, TcpClient, NetworkStream
-using System.Threading; // Thread
+using System.Threading; // Thread, Timeout
 
 namespace IpSocketToolBar
 {
@@ -110,7 +110,7 @@ namespace IpSocketToolBar
             // TCPリスナーを停止する
             listener.Stop();
 
-            // サーボスレッド停止
+            // サーバのスレッドを停止
             ServerThreadQuit = true;
             ServerThread.Join();
         }

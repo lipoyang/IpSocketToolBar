@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net; // IPAddress, IPEndPoint
 using System.Net.Sockets; // TcpClient, NetworkStream
-using System.Threading; // Thread
+using System.Threading; // Thread, Timeout
 
 namespace IpSocketToolBar
 {
