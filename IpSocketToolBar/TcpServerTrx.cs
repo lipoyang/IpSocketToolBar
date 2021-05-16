@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net; // IPAddress, IPEndPoint
-using System.Net.Sockets; //TcpListener, NetworkStream
+using System.Net.Sockets; //TcpListener, TcpClient, NetworkStream
 using System.Threading; // Thread
 
 namespace IpSocketToolBar
 {
-    public class TcpServerTrx
+    /// <summary>
+    /// TCPサーバのパケット送受信器
+    /// </summary>
+    public class TcpServerTrx : TcpTranceiver
     {
         #region イベント
 
@@ -28,27 +31,6 @@ namespace IpSocketToolBar
         #region 公開プロパティ/フィールド
 
         /// <summary>
-        /// 自分のIPアドレス (読み取り専用)
-        /// </summary>
-        public IPAddress LocalAddress { private set; get; }
-        /// <summary>
-        /// 自分のポート番号 (読み取り専用)
-        /// </summary>
-        public int LocalPort { private set; get; }
-        /// <summary>
-        /// 相手のIPアドレス (読み取り専用)
-        /// </summary>
-        public IPAddress RemoteAddress { private set; get; }
-        /// <summary>
-        /// 相手のポート番号 (読み取り専用)
-        /// </summary>
-        public int RemotePort { private set; get; }
-
-        /// <summary>
-        /// 送受信タイムアウト時間[ミリ秒]
-        /// </summary>
-        public int TimeOut = Timeout.Infinite;
-        /// <summary>
         /// TTL(最大転送回数) 255までの整数
         /// </summary>
         public int TTL = 255;
@@ -61,20 +43,15 @@ namespace IpSocketToolBar
         Thread ServerThread;
         bool ServerThreadQuit = false;
 
-        // TCPリスナ(自分), TCPクライアント(相手), ストリーム
+        // TCPリスナ
         TcpListener listener = null;
-        TcpClient client = null;
-        NetworkStream networkStream = null;
-
-        // 受信パケットのキュー
-        readonly Queue<byte[]> receivedPackets = new Queue<byte[]>();
 
         #endregion
 
         #region 公開メソッド
 
         /// <summary>
-        /// 接続待ち受け開始
+        /// クライアントからの接続待ち受けを開始する
         /// </summary>
         /// <param name="address">自分のIPアドレスまたはホスト名("localhost"など)</param>
         /// <param name="port">自分のポート番号</param>
@@ -93,7 +70,7 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// 接続待ち受け開始
+        /// クライアントからの接続待ち受けを開始する
         /// </summary>
         /// <param name="address">自分のIPアドレス</param>
         /// <param name="port">自分のポート番号</param>
@@ -110,11 +87,11 @@ namespace IpSocketToolBar
             listener.Start();
 
             // 自分のIPアドレスとポート番号
-            LocalAddress = address;
-            LocalPort = port;
-            //LocalAddress = ((System.Net.IPEndPoint)listener.LocalEndpoint).Address;
-            //LocalPort    = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
-            Console.WriteLine("待ち受け開始 ({0}:{1})", address, port);
+            //LocalAddress = address.ToString();
+            //LocalPort = port;
+            LocalAddress = ((System.Net.IPEndPoint)listener.LocalEndpoint).Address.ToString();
+            LocalPort    = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+            Console.WriteLine("待ち受け開始 ({0}:{1})", LocalAddress, LocalPort);
 
             // サーバのスレッドを開始
             ServerThreadQuit = false;
@@ -123,7 +100,7 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// 接続待ち受け停止
+        /// クライアントからの接続待ち受けを停止する
         /// </summary>
         public void Stop()
         {
@@ -136,82 +113,6 @@ namespace IpSocketToolBar
             // サーボスレッド停止
             ServerThreadQuit = true;
             ServerThread.Join();
-        }
-
-        /// <summary>
-        /// 接続をこちらから閉じる
-        /// </summary>
-        public void Close()
-        {
-            //閉じる
-            if (networkStream != null) {
-                networkStream.Close();
-                networkStream = null;
-            }
-            if (client != null) {
-                client.Close();
-                client = null;
-            }
-        }
-
-        /// <summary>
-        /// データを送信する
-        /// </summary>
-        /// <param name="data">バイト列データ</param>
-        public void Send(byte[] data)
-        {
-            if(networkStream != null)
-            {
-                // 非同期で送信開始
-                _ = networkStream.WriteAsync(data, 0, data.Length);
-            }
-        }
-        /// <summary>
-        /// データを送信する
-        /// </summary>
-        /// <param name="data">文字列データ</param>
-        public void Send(string stringData)
-        {
-            byte[] data = Encoding.ASCII.GetBytes(stringData);
-            Send(data);
-        }
-        /// <summary>
-        /// データを送信する
-        /// </summary>
-        /// <param name="packet">パケットのペイロード</param>
-        public void Send(PacketPayload packet)
-        {
-            Send(packet.Data);
-        }
-
-        /// <summary>
-        /// 受信したバイト列データを取得する
-        /// </summary>
-        /// <returns>バイト列データ</returns>
-        public byte[] GetBytes()
-        {
-            byte[] data = receivedPackets.Dequeue();
-            return data;
-        }
-        /// <summary>
-        /// 受信した文字列データを取得する
-        /// </summary>
-        /// <returns>文字列データ</returns>
-        public string GetString()
-        {
-            byte[] data = receivedPackets.Dequeue();
-            string str = Encoding.ASCII.GetString(data);
-            return str;
-        }
-        /// <summary>
-        /// 受信したパケットのペイロードを取得する
-        /// </summary>
-        /// <returns>パケットのペイロード</returns>
-        public PacketPayload GetPacket()
-        {
-            byte[] data = receivedPackets.Dequeue();
-            PacketPayload packet = new PacketPayload(data);
-            return packet;
         }
 
         #endregion
@@ -230,14 +131,14 @@ namespace IpSocketToolBar
                     client = listener.AcceptTcpClient();
 
                     // クライアントのIPアドレスとポート番号を取得
-                    RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address;
+                    RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                     RemotePort    = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
                     Console.WriteLine("クライアント接続({0}:{1})", RemoteAddress, RemotePort);
 
                     // クライアントのストリームを取得し、タイムアウト時間を設定
                     networkStream = client.GetStream();
-                    networkStream.ReadTimeout = this.TimeOut;
-                    networkStream.WriteTimeout = this.TimeOut;
+                    networkStream.ReadTimeout = this.AliveTimeOut;
+                    networkStream.WriteTimeout = this.AliveTimeOut;
 
                     // クライアントから送られたデータを受信する
                     receivedPackets.Clear();
