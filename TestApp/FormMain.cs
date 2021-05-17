@@ -28,5 +28,17 @@ namespace TestApp
             var form = new FormTcpClient() { Text = "TCPクライアント" };
             form.Show();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var form = new FormUdpSender() { Text = "UDP送信器" };
+            form.Show();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var form = new FormUdpReceiver() { Text = "UDP受信器" };
+            form.Show();
+        }
     }
 }

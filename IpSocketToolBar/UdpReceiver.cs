@@ -268,12 +268,10 @@ namespace IpSocketToolBar
                     RemotePort = remoteEP.Port;
                     Console.WriteLine("送信元:{0}:{1}", RemoteAddress, RemotePort);
 
+                    receivedPackets.Enqueue(data);
+
                     // 受信イベント発生
-                    if (Received != null)
-                    {
-                        receivedPackets.Enqueue(data);
-                        Received(this, EventArgs.Empty);
-                    }
+                    if (Received != null) Received(this, EventArgs.Empty);
                 }
                 catch
                 {
