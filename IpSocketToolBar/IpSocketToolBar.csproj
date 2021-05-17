@@ -43,26 +43,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StatusToolStrip.cs">
+    <Compile Include="Control\StatusToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PacketPayload.cs" />
-    <Compile Include="TcpClientToolStrip.cs">
+    <Compile Include="Class\PacketPayload.cs" />
+    <Compile Include="Control\TcpClientToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TcpClientTrx.cs" />
-    <Compile Include="TcpServerToolStrip.cs">
+    <Compile Include="Class\TcpClientTrx.cs" />
+    <Compile Include="Control\TcpServerToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TcpServerTrx.cs" />
+    <Compile Include="Class\TcpServerTrx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TcpTranceiver.cs" />
-    <Compile Include="UdpReceiver.cs" />
-    <Compile Include="UdpReceiverToolStrip.cs">
+    <Compile Include="Class\TcpTranceiver.cs" />
+    <Compile Include="Class\UdpReceiver.cs" />
+    <Compile Include="Control\UdpReceiverToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UdpSender.cs" />
-    <Compile Include="UdpSenderToolStrip.cs">
+    <Compile Include="Class\UdpSender.cs" />
+    <Compile Include="Control\UdpSenderToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
