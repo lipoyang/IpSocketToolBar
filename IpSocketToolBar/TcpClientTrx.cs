@@ -22,6 +22,11 @@ namespace IpSocketToolBar
         public event EventHandler Received = null;
 
         /// <summary>
+        /// サーバ側と接続したとき
+        /// </summary>
+        public event EventHandler Connected = null;
+
+        /// <summary>
         /// サーバ側から切断されたとき
         /// </summary>
         public event EventHandler Disconnected = null;
@@ -48,6 +53,14 @@ namespace IpSocketToolBar
         #region 公開メソッド
 
         /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public TcpClientTrx()
+        {
+            IsOpen = false;
+        }
+
+        /// <summary>
         /// サーバに接続する
         /// </summary>
         /// <param name="address">相手のIPアドレスまたはホスト名("localhost"など)</param>
@@ -62,6 +75,38 @@ namespace IpSocketToolBar
             ClientThreadQuit = false;
             ClientThread = new Thread(new ThreadStart(ClientThreadFunc));
             ClientThread.Start();
+
+            IsOpen = true; // TODO
+        }
+
+        /// <summary>
+        /// クライアントからの接続待ち受けを停止する
+        /// </summary>
+        public void Stop()
+        {
+            // サーバのスレッドを停止
+            ClientThreadQuit = true;
+            this.Close(); // 接続があれば閉じる
+            ClientThread.Join();
+            IsOpen = false;
+        }
+
+        /// <summary>
+        /// 接続をこちらから閉じる
+        /// </summary>
+        public void Close()
+        {
+            //閉じる
+            if (networkStream != null)
+            {
+                networkStream.Close();
+                networkStream = null;
+            }
+            if (client != null)
+            {
+                client.Close();
+                client = null;
+            }
         }
 
         #endregion
@@ -74,21 +119,11 @@ namespace IpSocketToolBar
             while (!ClientThreadQuit)
             {
                 // サーバと接続
-                // client = new TcpClient(RemoteAddress, RemotePort); // これだとブロッキング処理になる
-
-                // 非同期で接続試行開始
-                IAsyncResult ar = client.BeginConnect(RemoteAddress, RemotePort, null, null);
-                WaitHandle wh = ar.AsyncWaitHandle;
-                try{
-                    // ここで接続完了を待つ（タイムアウトあり）
-                    if (!ar.AsyncWaitHandle.WaitOne(ConnectingTimeout, false)) {
-                        client.Close();
-                    }
-                    client.EndConnect(ar);
-                }finally{
-                    wh.Close();
+                try {
+                    client = new TcpClient(RemoteAddress, RemotePort);
+                } catch {
+                    continue;
                 }
-                if (!client.Connected) continue; // タイムアウトした場合
 
                 LocalAddress  = ((IPEndPoint)client.Client.LocalEndPoint).Address.ToString();
                 LocalPort     = ((IPEndPoint)client.Client.LocalEndPoint).Port;
@@ -96,6 +131,8 @@ namespace IpSocketToolBar
                 RemotePort    = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
                 Console.WriteLine("サーバー({0}:{1})と接続({2}:{3})",
                     RemoteAddress, RemotePort, LocalAddress, LocalPort);
+
+                if (Connected != null) Connected(this, EventArgs.Empty);
 
                 // クライアントのストリームを取得し、タイムアウト時間を設定
                 networkStream = client.GetStream();
@@ -105,7 +142,7 @@ namespace IpSocketToolBar
                 // サーバから送られたデータを受信する
                 receivedPackets.Clear();
                 byte[] data = new byte[1500];
-                int size = 0;
+                int size;
                 while (true)
                 {
                     // データを受信する
@@ -113,29 +150,36 @@ namespace IpSocketToolBar
                     //    指定のlengthぶんデータがたまるのを待つわけではない
                     //    何もパケットが来なければタイムアウトまで待つ
                     // TODO this.Close()で抜けるか要確認
-                    size = networkStream.Read(data, 0, data.Length);
-
-                    // Readが0を返したらクライアント側からの切断と判断。
+                    try
+                    {
+                        size = networkStream.Read(data, 0, data.Length);
+                    }
+                    catch
+                    {
+                        break; // this.Close()の場合
+                    }
+                    // Readが0を返したら切断と判断。
                     if (size == 0)
                     {
-                        Console.WriteLine("サーバ切断"); // TODO
-                        if (Disconnected != null)
-                        {
-                            Disconnected(this, EventArgs.Empty);
-                        }
-                        this.Close();
                         break;
                     }
                     // 受信データあり。イベント発生
-                    else if (Received != null)
+                    else
                     {
                         receivedPackets.Enqueue(data);
-                        Received(this, EventArgs.Empty);
+                        if (Received != null) Received(this, EventArgs.Empty);
                     }
                 }//while(true)
+
+                Console.WriteLine("サーバ切断");
+                if (Disconnected != null)
+                {
+                    Disconnected(this, EventArgs.Empty);
+                }
+                this.Close();
             }
         }
 
-        #endregion
+#endregion
     }
 }

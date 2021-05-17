@@ -33,6 +33,10 @@ namespace IpSocketToolBar
         /// </summary>
         public int RemotePort { protected set; get; }
 
+        /// <summary>
+        /// 通信を開いているか？
+        /// </summary>
+        public bool IsOpen { get; protected set; }
         #endregion
 
         #region 内部フィールド
@@ -43,6 +47,14 @@ namespace IpSocketToolBar
         #endregion
 
         #region 公開メソッド
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public UdpSender()
+        {
+            IsOpen = false;
+        }
 
         /// <summary>
         /// 送信器を開始する
@@ -80,6 +92,7 @@ namespace IpSocketToolBar
 
             RemoteAddress = address.ToString();
             RemotePort = port;
+            IsOpen = true;
         }
 
         /// <summary>
@@ -90,6 +103,7 @@ namespace IpSocketToolBar
             //UdpClientを閉じる
             client.Close();
             client = null;
+            IsOpen = false;
         }
 
         /// <summary>

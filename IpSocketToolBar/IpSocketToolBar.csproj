@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,13 +43,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StatusToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PacketPayload.cs" />
+    <Compile Include="TcpClientToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TcpClientTrx.cs" />
+    <Compile Include="TcpServerToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TcpServerTrx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TcpTranceiver.cs" />
     <Compile Include="UdpReceiver.cs" />
+    <Compile Include="UdpReceiverToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UdpSender.cs" />
+    <Compile Include="UdpSenderToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IniFileSharp\IniFileSharp.csproj">
+      <Project>{6812dc6e-b7b5-4259-9195-bf52e9e60c88}</Project>
+      <Name>IniFileSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

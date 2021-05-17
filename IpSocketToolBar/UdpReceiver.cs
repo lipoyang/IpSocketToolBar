@@ -43,6 +43,11 @@ namespace IpSocketToolBar
         public int RemotePort { protected set; get; }
 
         /// <summary>
+        /// 通信を開いているか？
+        /// </summary>
+        public bool IsOpen { get; protected set; }
+
+        /// <summary>
         /// 受信ポーリング周期[ミリ秒]
         /// </summary>
         public int PollingInterval = 20;
@@ -64,6 +69,14 @@ namespace IpSocketToolBar
         #endregion
 
         #region 公開メソッド
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public UdpReceiver()
+        {
+            IsOpen = false;
+        }
 
         /// <summary>
         /// 受信待ち受けを開始する
@@ -105,6 +118,7 @@ namespace IpSocketToolBar
             ReceiverThreadQuit = false;
             ReceiverThread = new Thread(new ThreadStart(ReceiverThreadFunc));
             ReceiverThread.Start();
+            IsOpen = true;
         }
 
         /// <summary>
@@ -118,6 +132,7 @@ namespace IpSocketToolBar
             // 受信スレッド停止
             ReceiverThreadQuit = true;
             ReceiverThread.Join();
+            IsOpen = false;
         }
 
         /// <summary>
@@ -136,8 +151,15 @@ namespace IpSocketToolBar
         public string GetString()
         {
             byte[] data = receivedPackets.Dequeue();
-            string str = Encoding.ASCII.GetString(data);
-            return str;
+            if (data != null)
+            {
+                string str = Encoding.ASCII.GetString(data);
+                return str;
+            }
+            else
+            {
+                return null;
+            }
         }
         /// <summary>
         /// 受信したパケットのペイロードを取得する
@@ -146,8 +168,16 @@ namespace IpSocketToolBar
         public PacketPayload GetPacket()
         {
             byte[] data = receivedPackets.Dequeue();
-            PacketPayload packet = new PacketPayload(data);
-            return packet;
+            if (data != null)
+            {
+                PacketPayload packet = new PacketPayload(data);
+                return packet;
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         /// <summary>
@@ -160,7 +190,7 @@ namespace IpSocketToolBar
             DateTime startTime = DateTime.Now;
 
             // 受信パケットのキューをいったん破棄
-            receivedPackets.Clear();
+            //receivedPackets.Clear();
 
             // パケット受信かタイムアウトまで
             while (true)
@@ -189,8 +219,15 @@ namespace IpSocketToolBar
         public string WaitString(int timeout)
         {
             byte[] data = WaitBytes(timeout);
-            string str = Encoding.ASCII.GetString(data);
-            return str;
+            if (data != null)
+            {
+                string str = Encoding.ASCII.GetString(data);
+                return str;
+            }
+            else
+            {
+                return null;
+            }
         }
         /// <summary>
         /// パケットの受信を待つ
@@ -200,8 +237,15 @@ namespace IpSocketToolBar
         public PacketPayload WaitPacket(int timeout)
         {
             byte[] data = WaitBytes(timeout);
-            PacketPayload packet = new PacketPayload(data);
-            return packet;
+            if (data != null)
+            {
+                PacketPayload packet = new PacketPayload(data);
+                return packet;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         #endregion

@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpSocketToolBar", "IpSocketToolBar\IpSocketToolBar.csproj", "{564AE226-255D-48B4-9946-43CEC59E3D19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{22388E8D-D19D-44EC-89FE-1CFBB631B0CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IniFileSharp", "IniFileSharp\IniFileSharp.csproj", "{6812DC6E-B7B5-4259-9195-BF52E9E60C88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{564AE226-255D-48B4-9946-43CEC59E3D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{564AE226-255D-48B4-9946-43CEC59E3D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{564AE226-255D-48B4-9946-43CEC59E3D19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22388E8D-D19D-44EC-89FE-1CFBB631B0CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22388E8D-D19D-44EC-89FE-1CFBB631B0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22388E8D-D19D-44EC-89FE-1CFBB631B0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22388E8D-D19D-44EC-89FE-1CFBB631B0CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6812DC6E-B7B5-4259-9195-BF52E9E60C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6812DC6E-B7B5-4259-9195-BF52E9E60C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6812DC6E-B7B5-4259-9195-BF52E9E60C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6812DC6E-B7B5-4259-9195-BF52E9E60C88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,6 +22,11 @@ namespace IpSocketToolBar
         public event EventHandler Received = null;
 
         /// <summary>
+        /// クライアント側から接続されたとき
+        /// </summary>
+        public event EventHandler Connected = null;
+
+        /// <summary>
         /// クライアント側から切断されたとき
         /// </summary>
         public event EventHandler Disconnected = null;
@@ -49,6 +54,14 @@ namespace IpSocketToolBar
         #endregion
 
         #region 公開メソッド
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public TcpServerTrx()
+        {
+            IsOpen = false;
+        }
 
         /// <summary>
         /// クライアントからの接続待ち受けを開始する
@@ -97,6 +110,7 @@ namespace IpSocketToolBar
             ServerThreadQuit = false;
             ServerThread = new Thread(new ThreadStart(ServerThreadFunc));
             ServerThread.Start();
+            IsOpen = true;
         }
 
         /// <summary>
@@ -104,15 +118,35 @@ namespace IpSocketToolBar
         /// </summary>
         public void Stop()
         {
+            // サーバのスレッドを停止
+            ServerThreadQuit = true;
+
             // 接続があれば閉じる
             this.Close();
 
             // TCPリスナーを停止する
             listener.Stop();
 
-            // サーバのスレッドを停止
-            ServerThreadQuit = true;
             ServerThread.Join();
+            IsOpen = false;
+        }
+
+        /// <summary>
+        /// 接続をこちらから閉じる
+        /// </summary>
+        public void Close()
+        {
+            //閉じる
+            if (networkStream != null)
+            {
+                networkStream.Close();
+                networkStream = null;
+            }
+            if (client != null)
+            {
+                client.Close();
+                client = null;
+            }
         }
 
         #endregion
@@ -134,6 +168,8 @@ namespace IpSocketToolBar
                     RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                     RemotePort    = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
                     Console.WriteLine("クライアント接続({0}:{1})", RemoteAddress, RemotePort);
+
+                    if (Connected != null) Connected(this, EventArgs.Empty);
 
                     // クライアントのストリームを取得し、タイムアウト時間を設定
                     networkStream = client.GetStream();
@@ -164,10 +200,10 @@ namespace IpSocketToolBar
                             break;
                         }
                         // 受信データあり。イベント発生
-                        else if(Received != null)
+                        else
                         {
                             receivedPackets.Enqueue(data);
-                            Received(this, EventArgs.Empty);
+                            if (Received != null) Received(this, EventArgs.Empty);
                         }
                     }//while(true)
                 }
