@@ -40,7 +40,7 @@ namespace IpSocketToolBar
         /// <summary>
         /// UDP送信器
         /// </summary>
-        public UdpSender Sender { get => udpSender; }
+        public UdpSender Socket { get => socket; }
 
         #endregion
 
@@ -57,8 +57,8 @@ namespace IpSocketToolBar
             // 表示状態の初期化
             textIpAddress.Enabled = true;
             textPort.Enabled = true;
-            buttonStart.Enabled = true;
-            buttonStop.Enabled = false;
+            buttonOpen.Enabled = true;
+            buttonClose.Enabled = false;
         }
         
         /// <summary>
@@ -86,8 +86,8 @@ namespace IpSocketToolBar
         {
             // TCPサーバが開始していたら停止する
             try{
-                if (udpSender.IsOpen){
-                    udpSender.Close();
+                if (socket.IsOpen){
+                    socket.Close();
                 }
             }catch{
                 ;
@@ -99,24 +99,24 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// TCPサーバを開く
+        /// ソケットを開く
         /// </summary>
         /// <returns>成否</returns>
         public bool Open()
         {
             this.Invoke((Action)(() => {
-                buttonStart.PerformClick();
+                buttonOpen.PerformClick();
             }));
-            return udpSender.IsOpen;
+            return socket.IsOpen;
         }
 
         /// <summary>
-        /// TCPサーバを閉じる
+        /// ソケットを閉じる
         /// </summary>
         public void Close()
         {
             this.Invoke((Action)(() => {
-                buttonStop.PerformClick();
+                buttonClose.PerformClick();
             }));
         }
         
@@ -133,7 +133,7 @@ namespace IpSocketToolBar
         int defaultPort = 1234;
 
         // UDP送信器
-        readonly UdpSender udpSender = new UdpSender();
+        readonly UdpSender socket = new UdpSender();
 
         // 開始ボタンクリック時の処理
         private void buttonStart_Click(object sender, EventArgs e)
@@ -161,7 +161,7 @@ namespace IpSocketToolBar
                 return;
             }
             // ポートを開く
-            udpSender.Open(ipAddressStr, port);
+            socket.Open(ipAddressStr, port);
 
             // IPアドレスとポート番号を更新 (ここで毎回ファイル保存はしない)
             defaultIpAddress = ipAddressStr;
@@ -169,8 +169,8 @@ namespace IpSocketToolBar
 
             textIpAddress.Enabled = false;
             textPort.Enabled = false;
-            buttonStart.Enabled = false;
-            buttonStop.Enabled = true;
+            buttonOpen.Enabled = false;
+            buttonClose.Enabled = true;
 
             // イベント発行
             if(Started != null) Started(this, EventArgs.Empty);
@@ -182,12 +182,12 @@ namespace IpSocketToolBar
         private void buttonStop_Click(object sender, EventArgs e)
         {
             // ポートを閉じる
-            udpSender.Close();
+            socket.Close();
 
             textIpAddress.Enabled = true;
             textPort.Enabled = true;
-            buttonStart.Enabled = true;
-            buttonStop.Enabled = false;
+            buttonOpen.Enabled = true;
+            buttonClose.Enabled = false;
 
             // イベント発行
             if (Stopped != null) Stopped(this, EventArgs.Empty);
@@ -246,17 +246,17 @@ namespace IpSocketToolBar
         // ポート番号ボックス
         ToolStripTextBox textPort;
         // 開始ボタン
-        ToolStripButton buttonStart;
+        ToolStripButton buttonOpen;
         // 停止ボタン
-        ToolStripButton buttonStop;
+        ToolStripButton buttonClose;
 
         // コンポーネントの初期化
         private void InitializeComponent()
         {
             this.textIpAddress = new ToolStripTextBox();
             this.textPort = new ToolStripTextBox();
-            this.buttonStart = new ToolStripButton();
-            this.buttonStop = new ToolStripButton();
+            this.buttonOpen = new ToolStripButton();
+            this.buttonClose = new ToolStripButton();
             this.SuspendLayout();
 
             var labelIpAddress = new ToolStripLabel("相手のアドレス");
@@ -268,20 +268,20 @@ namespace IpSocketToolBar
             this.textPort.ToolTipText = "ポート番号の指定";
             this.textPort.Text = "";
 
-            this.buttonStart.Text = "開始";
-            this.buttonStart.ToolTipText = "開始";
-            this.buttonStart.Click += buttonStart_Click;
+            this.buttonOpen.Text = "開始";
+            this.buttonOpen.ToolTipText = "開始";
+            this.buttonOpen.Click += buttonStart_Click;
 
-            this.buttonStop.Text = "停止";
-            this.buttonStop.ToolTipText = "停止";
-            this.buttonStop.Click += buttonStop_Click;
+            this.buttonClose.Text = "停止";
+            this.buttonClose.ToolTipText = "停止";
+            this.buttonClose.Click += buttonStop_Click;
 
             this.Items.Add(labelIpAddress);
             this.Items.Add(textIpAddress);
             this.Items.Add(labelPort);
             this.Items.Add(textPort);
-            this.Items.Add(buttonStart);
-            this.Items.Add(buttonStop);
+            this.Items.Add(buttonOpen);
+            this.Items.Add(buttonClose);
 
             this.ResumeLayout(false);
             this.PerformLayout();

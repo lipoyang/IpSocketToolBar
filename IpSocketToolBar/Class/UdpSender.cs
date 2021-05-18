@@ -100,7 +100,6 @@ namespace IpSocketToolBar
         /// </summary>
         public void Close()
         {
-            //UdpClientを閉じる
             client.Close();
             client = null;
             IsOpen = false;

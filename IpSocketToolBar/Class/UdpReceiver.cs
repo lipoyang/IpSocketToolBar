@@ -57,8 +57,8 @@ namespace IpSocketToolBar
         #region 内部フィールド
 
         // サーバのスレッド
-        Thread ReceiverThread;
-        bool ReceiverThreadQuit = false;
+        Thread thread;
+        bool threadQuit = false;
 
         // UDPクライアント
         UdpClient client = null;
@@ -115,9 +115,9 @@ namespace IpSocketToolBar
             receivedPackets.Clear();
 
             // 受信スレッドを開始
-            ReceiverThreadQuit = false;
-            ReceiverThread = new Thread(new ThreadStart(ReceiverThreadFunc));
-            ReceiverThread.Start();
+            threadQuit = false;
+            thread = new Thread(new ThreadStart(threadFunc));
+            thread.Start();
             IsOpen = true;
         }
 
@@ -126,12 +126,9 @@ namespace IpSocketToolBar
         /// </summary>
         public void Close()
         {
-            //UdpClientを閉じる
-            client.Close();
-
-            // 受信スレッド停止
-            ReceiverThreadQuit = true;
-            ReceiverThread.Join();
+            threadQuit = true; // スレッド終了要求
+            client.Close();    // 接続があれば切断する
+            thread.Join();     // スレッド終了待ち
             IsOpen = false;
         }
 
@@ -253,9 +250,9 @@ namespace IpSocketToolBar
         #region 内部メソッド
 
         // サーバのスレッド関数
-        private void ReceiverThreadFunc()
+        private void threadFunc()
         {
-            while (!ReceiverThreadQuit)
+            while (!threadQuit)
             {
                 try
                 {

@@ -51,7 +51,7 @@ namespace TestApp
         private void threadRxFunc()
         {
             // シリアルポート
-            var server = tcpServerToolStrip.Server;
+            var server = tcpServerToolStrip.Socket;
 
             while (!threadRxQuit)
             {
@@ -74,7 +74,7 @@ namespace TestApp
         private void buttonSend_Click(object sender, EventArgs e)
         {
             // シリアルポート
-            var server = tcpServerToolStrip.Server;
+            var server = tcpServerToolStrip.Socket;
             if (!server.IsOpen) return;
 
             // コマンドラインを送信

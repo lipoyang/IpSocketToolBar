@@ -41,8 +41,8 @@ namespace IpSocketToolBar
         [Category("拡張機能")]
         public event EventHandler Connected
         {
-            add => tcpServer.Connected += value;
-            remove => tcpServer.Connected -= value;
+            add => socket.Connected += value;
+            remove => socket.Connected -= value;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace IpSocketToolBar
         [Category("拡張機能")]
         public event EventHandler Disconnected
         {
-            add => tcpServer.Disconnected += value;
-            remove => tcpServer.Disconnected -= value;
+            add => socket.Disconnected += value;
+            remove => socket.Disconnected -= value;
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace IpSocketToolBar
         [Category("拡張機能")]
         public event EventHandler Rreceived
         {
-            add => tcpServer.Received += value;
-            remove => tcpServer.Received -= value;
+            add => socket.Received += value;
+            remove => socket.Received -= value;
         }
 
         #endregion
@@ -74,7 +74,7 @@ namespace IpSocketToolBar
         /// <summary>
         /// TCPサーバ
         /// </summary>
-        public TcpServerTrx Server { get => tcpServer; }
+        public TcpServerTrx Socket { get => socket; }
 
         #endregion
 
@@ -91,8 +91,8 @@ namespace IpSocketToolBar
             // 表示状態の初期化
             listIpAddress.Enabled = true;
             textPort.Enabled = true;
-            buttonStart.Enabled = true;
-            buttonStop.Enabled = false;
+            buttonOpen.Enabled = true;
+            buttonClose.Enabled = false;
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace IpSocketToolBar
         {
             // TCPサーバが開始していたら停止する
             try{
-                if (tcpServer.IsOpen){
-                    tcpServer.Stop();
+                if (socket.IsOpen){
+                    socket.Close();
                 }
             }catch{
                 ;
@@ -133,24 +133,24 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// TCPサーバを開く
+        /// ソケットを開く
         /// </summary>
         /// <returns>成否</returns>
         public bool Open()
         {
             this.Invoke((Action)(() => {
-                buttonStart.PerformClick();
+                buttonOpen.PerformClick();
             }));
-            return tcpServer.IsOpen;
+            return socket.IsOpen;
         }
 
         /// <summary>
-        /// TCPサーバを閉じる
+        /// ソケットを閉じる
         /// </summary>
         public void Close()
         {
             this.Invoke((Action)(() => {
-                buttonStop.PerformClick();
+                buttonClose.PerformClick();
             }));
         }
 
@@ -167,7 +167,7 @@ namespace IpSocketToolBar
         int defaultPort = 1234;
 
         // TCPサーバ
-        readonly TcpServerTrx tcpServer = new TcpServerTrx();
+        readonly TcpServerTrx socket = new TcpServerTrx();
 
         // IPアドレスリストのドロップダウン時の処理
         private void listIpAddress_DropDown(object sender, EventArgs e)
@@ -202,7 +202,7 @@ namespace IpSocketToolBar
                 return;
             }
             // ポートを開く
-            tcpServer.Start(ipAddressStr, port);
+            socket.Open(ipAddressStr, port);
 
             // IPアドレスとポート番号を更新 (ここで毎回ファイル保存はしない)
             defaultIpAddress = ipAddressStr;
@@ -210,8 +210,8 @@ namespace IpSocketToolBar
 
             listIpAddress.Enabled = false;
             textPort.Enabled = false;
-            buttonStart.Enabled = false;
-            buttonStop.Enabled = true;
+            buttonOpen.Enabled = false;
+            buttonClose.Enabled = true;
 
             // イベント発行
             if(Started != null) Started(this, EventArgs.Empty);
@@ -223,12 +223,12 @@ namespace IpSocketToolBar
         private void buttonStop_Click(object sender, EventArgs e)
         {
             // ポートを閉じる
-            tcpServer.Stop();
+            socket.Close();
 
             listIpAddress.Enabled = true;
             textPort.Enabled = true;
-            buttonStart.Enabled = true;
-            buttonStop.Enabled = false;
+            buttonOpen.Enabled = true;
+            buttonClose.Enabled = false;
 
             // イベント発行
             if (Stopped != null) Stopped(this, EventArgs.Empty);
@@ -317,17 +317,17 @@ namespace IpSocketToolBar
         // ポート番号ボックス
         ToolStripTextBox textPort;
         // 開始ボタン
-        ToolStripButton buttonStart;
+        ToolStripButton buttonOpen;
         // 停止ボタン
-        ToolStripButton buttonStop;
+        ToolStripButton buttonClose;
 
         // コンポーネントの初期化
         private void InitializeComponent()
         {
             this.listIpAddress = new ToolStripComboBox();
             this.textPort = new ToolStripTextBox();
-            this.buttonStart = new ToolStripButton();
-            this.buttonStop = new ToolStripButton();
+            this.buttonOpen = new ToolStripButton();
+            this.buttonClose = new ToolStripButton();
             this.SuspendLayout();
 
             var labelIpAddress = new ToolStripLabel("自分のアドレス");
@@ -341,20 +341,20 @@ namespace IpSocketToolBar
             this.textPort.ToolTipText = "ポート番号の指定";
             this.textPort.Text = "";
 
-            this.buttonStart.Text = "接続";
-            this.buttonStart.ToolTipText = "接続";
-            this.buttonStart.Click += buttonStart_Click;
+            this.buttonOpen.Text = "開始";
+            this.buttonOpen.ToolTipText = "開始";
+            this.buttonOpen.Click += buttonStart_Click;
 
-            this.buttonStop.Text = "切断";
-            this.buttonStop.ToolTipText = "切断";
-            this.buttonStop.Click += buttonStop_Click;
+            this.buttonClose.Text = "停止";
+            this.buttonClose.ToolTipText = "停止";
+            this.buttonClose.Click += buttonStop_Click;
 
             this.Items.Add(labelIpAddress);
             this.Items.Add(listIpAddress);
             this.Items.Add(labelPort);
             this.Items.Add(textPort);
-            this.Items.Add(buttonStart);
-            this.Items.Add(buttonStop);
+            this.Items.Add(buttonOpen);
+            this.Items.Add(buttonClose);
 
             this.ResumeLayout(false);
             this.PerformLayout();

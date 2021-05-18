@@ -38,7 +38,7 @@ namespace TestApp
         private void buttonSend_Click(object sender, EventArgs e)
         {
             // シリアルポート
-            var server = udpSenderToolStrip.Sender;
+            var server = udpSenderToolStrip.Socket;
             if (!server.IsOpen) return;
 
             // コマンドラインを送信

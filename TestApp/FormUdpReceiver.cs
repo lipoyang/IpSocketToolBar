@@ -51,7 +51,7 @@ namespace TestApp
         private void threadRxFunc()
         {
             // シリアルポート
-            var receiver = udpReceiverToolStrip.Receiver;
+            var receiver = udpReceiverToolStrip.Socket;
 
             while (!threadRxQuit)
             {

@@ -45,8 +45,8 @@ namespace IpSocketToolBar
         #region 内部フィールド
 
         // サーバのスレッド
-        Thread ServerThread;
-        bool ServerThreadQuit = false;
+        Thread thread;
+        bool threadQuit = false;
 
         // TCPリスナ
         TcpListener listener = null;
@@ -68,7 +68,7 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="address">自分のIPアドレスまたはホスト名("localhost"など)</param>
         /// <param name="port">自分のポート番号</param>
-        public void Start(string address, int port)
+        public void Open(string address, int port)
         {
             IPAddress ipAddress;
 
@@ -79,7 +79,7 @@ namespace IpSocketToolBar
                 // ホスト名からIPアドレスを取得
                 ipAddress = Dns.GetHostEntry(address).AddressList[0];
             }
-            Start(ipAddress, port);
+            Open(ipAddress, port);
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="address">自分のIPアドレス</param>
         /// <param name="port">自分のポート番号</param>
-        public void Start(IPAddress address, int port)
+        public void Open(IPAddress address, int port)
         {
-            // TcpListenerオブジェクトを生成し、待ち受けを開始
+            // 待ち受けを開始
             listener = new TcpListener(address, port);
             listener.Server.SetSocketOption(
                 SocketOptionLevel.IP,
@@ -100,43 +100,34 @@ namespace IpSocketToolBar
             listener.Start();
 
             // 自分のIPアドレスとポート番号
-            //LocalAddress = address.ToString();
-            //LocalPort = port;
-            LocalAddress = ((System.Net.IPEndPoint)listener.LocalEndpoint).Address.ToString();
-            LocalPort    = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+            LocalAddress = address.ToString();
+            LocalPort = port;
             Console.WriteLine("待ち受け開始 ({0}:{1})", LocalAddress, LocalPort);
 
-            // サーバのスレッドを開始
-            ServerThreadQuit = false;
-            ServerThread = new Thread(new ThreadStart(ServerThreadFunc));
-            ServerThread.Start();
+            // スレッドを開始
+            threadQuit = false;
+            thread = new Thread(new ThreadStart(threadFunc));
+            thread.Start();
             IsOpen = true;
         }
 
         /// <summary>
         /// クライアントからの接続待ち受けを停止する
         /// </summary>
-        public void Stop()
+        public void Close()
         {
-            // サーバのスレッドを停止
-            ServerThreadQuit = true;
-
-            // 接続があれば閉じる
-            this.Close();
-
-            // TCPリスナーを停止する
-            listener.Stop();
-
-            ServerThread.Join();
+            threadQuit = true; // スレッド終了要求
+            this.Disconnect(); // 接続があれば切断する
+            listener.Stop();   // TCPリスナーを停止する
+            thread.Join();     // スレッド終了待ち
             IsOpen = false;
         }
 
         /// <summary>
-        /// 接続をこちらから閉じる
+        /// 接続を切断する
         /// </summary>
-        public void Close()
+        public void Disconnect()
         {
-            //閉じる
             if (networkStream != null)
             {
                 networkStream.Close();
@@ -154,14 +145,14 @@ namespace IpSocketToolBar
         #region 内部メソッド
 
         // サーバのスレッド関数
-        private void ServerThreadFunc()
+        private void threadFunc()
         {
-            while (!ServerThreadQuit)
+            while (!threadQuit)
             {
                 try
                 {
                     // クライアントからの接続を待ち受ける
-                    // ※ ブロッキング処理だが、this.Stop()すれば例外発生して抜ける
+                    // ※ ブロッキング処理だが、this.Close()すれば例外発生して抜ける
                     client = listener.AcceptTcpClient();
 
                     // クライアントのIPアドレスとポート番号を取得
@@ -186,7 +177,7 @@ namespace IpSocketToolBar
                         // ※ ブロッキング処理だが、1パケット受信するごとに抜ける
                         //    指定のlengthぶんデータがたまるのを待つわけではない
                         //    何もパケットが来なければタイムアウトまで待つ
-                        // TODO this.Close()で抜けるか要確認
+                        // TODO this.Disconnect()で抜けるか要確認
                         size = networkStream.Read(data, 0, data.Length);
 
                         // Readが0を返したらクライアント側からの切断と判断。
@@ -196,7 +187,7 @@ namespace IpSocketToolBar
                             if (Disconnected != null) {
                                 Disconnected(this, EventArgs.Empty);
                             }
-                            this.Close();
+                            this.Disconnect();
                             break;
                         }
                         // 受信データあり。イベント発生
@@ -209,10 +200,10 @@ namespace IpSocketToolBar
                 }
                 catch
                 {
-                    if (!ServerThreadQuit)
+                    if (!threadQuit)
                     {
                         Console.WriteLine("サーバスレッドで予期しない例外");
-                        this.Stop();
+                        this.Close();
                     }
                 }
             }// while (!ServerThreadQuit)

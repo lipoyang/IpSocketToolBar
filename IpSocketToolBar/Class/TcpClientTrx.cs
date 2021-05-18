@@ -44,9 +44,9 @@ namespace IpSocketToolBar
 
         #region 内部フィールド
 
-        // サーバのスレッド
-        Thread ClientThread;
-        bool ClientThreadQuit = false;
+        // スレッド
+        Thread thread;
+        bool threadQuit = false;
 
         #endregion
 
@@ -61,42 +61,40 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// サーバに接続する
+        /// サーバへの接続を開始する
         /// </summary>
         /// <param name="address">相手のIPアドレスまたはホスト名("localhost"など)</param>
         /// <param name="port">相手のポート番号</param>
-        public void Connect(string address, int port)
+        public void Open(string address, int port)
         {
             // 自分のIPアドレスとポート番号
             RemoteAddress = address;
             RemotePort = port;
 
             // サーバのスレッドを開始
-            ClientThreadQuit = false;
-            ClientThread = new Thread(new ThreadStart(ClientThreadFunc));
-            ClientThread.Start();
+            threadQuit = false;
+            thread = new Thread(new ThreadStart(threadFunc));
+            thread.Start();
 
             IsOpen = true; // TODO
         }
 
         /// <summary>
-        /// クライアントからの接続待ち受けを停止する
+        /// サーバとの接続を停止する
         /// </summary>
-        public void Stop()
+        public void Close()
         {
-            // サーバのスレッドを停止
-            ClientThreadQuit = true;
-            this.Close(); // 接続があれば閉じる
-            ClientThread.Join();
+            threadQuit = true; // スレッド終了要求
+            this.Disconnect(); // 接続があれば切断する
+            thread.Join();     // スレッド終了待ち
             IsOpen = false;
         }
 
         /// <summary>
-        /// 接続をこちらから閉じる
+        /// 接続を切断する
         /// </summary>
-        public void Close()
+        public void Disconnect()
         {
-            //閉じる
             if (networkStream != null)
             {
                 networkStream.Close();
@@ -114,9 +112,9 @@ namespace IpSocketToolBar
         #region 内部メソッド
 
         // サーバのスレッド関数
-        private void ClientThreadFunc()
+        private void threadFunc()
         {
-            while (!ClientThreadQuit)
+            while (!threadQuit)
             {
                 // サーバと接続
                 try {
@@ -176,7 +174,7 @@ namespace IpSocketToolBar
                 {
                     Disconnected(this, EventArgs.Empty);
                 }
-                this.Close();
+                this.Disconnect();
             }
         }
 
