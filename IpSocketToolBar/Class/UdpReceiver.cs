@@ -79,50 +79,62 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// 受信待ち受けを開始する
+        /// 受信器を開始する
         /// </summary>
-        /// <param name="address">自分のIPアドレスまたはホスト名("localhost"など)</param>
+        /// <param name="address">自分のIPアドレスまたはホスト名</param>
         /// <param name="port">自分のポート番号</param>
-        public void Open(string address, int port)
+        /// <returns>成否</returns>
+        public bool Open(string address, int port)
         {
+            // IPアドレスの解釈
             IPAddress ipAddress;
-
-            try {
-                // IPアドレスの解釈
-                ipAddress = IPAddress.Parse(address);
-            } catch {
-                // ホスト名からIPアドレスを取得
-                ipAddress = Dns.GetHostEntry(address).AddressList[0];
+            if (!IPAddress.TryParse(address, out ipAddress))
+            {
+                try{
+                    // ホスト名からIPアドレスを取得
+                    ipAddress = Dns.GetHostEntry(address).AddressList[0];
+                }catch{
+                    return false;
+                }
             }
-            Open(ipAddress, port);
+            return Open(ipAddress, port);
         }
 
         /// <summary>
-        /// 受信待ち受けを開始する
+        /// 受信器を開始する
         /// </summary>
         /// <param name="address">自分のIPアドレス</param>
         /// <param name="port">自分のポート番号</param>
-        public void Open(IPAddress address, int port)
+        /// <returns>成否</returns>
+        public bool Open(IPAddress address, int port)
         {
-            // 自分
-            IPEndPoint localEP = new IPEndPoint(address, port);
-            client = new UdpClient(localEP);
+            try
+            {
+                // 自分
+                IPEndPoint localEP = new IPEndPoint(address, port);
+                client = new UdpClient(localEP);
 
-            LocalAddress = address.ToString();
-            LocalPort = port;
+                LocalAddress = address.ToString();
+                LocalPort = port;
 
-            // 受信パケットのキューをクリア
-            receivedPackets.Clear();
+                // 受信パケットのキューをクリア
+                receivedPackets.Clear();
 
-            // 受信スレッドを開始
-            threadQuit = false;
-            thread = new Thread(new ThreadStart(threadFunc));
-            thread.Start();
-            IsOpen = true;
+                // 受信スレッドを開始
+                threadQuit = false;
+                thread = new Thread(new ThreadStart(threadFunc));
+                thread.Start();
+                IsOpen = true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
-        /// 受信待ち受けを停止する
+        /// 受信器を停止する
         /// </summary>
         public void Close()
         {

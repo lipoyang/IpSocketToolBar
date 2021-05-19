@@ -59,20 +59,23 @@ namespace IpSocketToolBar
         /// <summary>
         /// 送信器を開始する
         /// </summary>
-        /// <param name="address">相手のIPアドレスまたはホスト名("localhost"など)</param>
+        /// <param name="address">相手のIPアドレスまたはホスト名</param>
         /// <param name="port">相手のポート番号</param>
-        public void Open(string address, int port)
+        /// <returns>成否</returns>
+        public bool Open(string address, int port)
         {
+            // IPアドレスの解釈
             IPAddress ipAddress;
-
-            try {
-                // IPアドレスの解釈
-                ipAddress = IPAddress.Parse(address);
-            } catch {
-                // ホスト名からIPアドレスを取得
-                ipAddress = Dns.GetHostEntry(address).AddressList[0];
+            if (!IPAddress.TryParse(address, out ipAddress))
+            {
+                try{
+                    // ホスト名からIPアドレスを取得
+                    ipAddress = Dns.GetHostEntry(address).AddressList[0];
+                }catch{
+                    return false;
+                }
             }
-            Open(ipAddress, port);
+            return Open(ipAddress, port);
         }
 
         /// <summary>
@@ -80,19 +83,28 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="address">相手のIPアドレス</param>
         /// <param name="port">相手のポート番号</param>
-        public void Open(IPAddress address, int port)
+        /// <returns>成否</returns>
+        public bool Open(IPAddress address, int port)
         {
-            // 送信相手
-            IPEndPoint remoteEP = new IPEndPoint(address, port);
+            try
+            {
+                // 送信相手
+                IPEndPoint remoteEP = new IPEndPoint(address, port);
 
-            // UDPはコネクションレスなので、事前に接続先と接続を確立するわけではない。
-            // ただConnect()で送信先を指定しておくとSend()の引数に送信先を省略できる。
-            client = new UdpClient(port);
-            client.Connect(remoteEP);
+                // UDPはコネクションレスなので、事前に接続先と接続を確立するわけではない。
+                // ただConnect()で送信先を指定しておくとSend()の引数に送信先を省略できる。
+                client = new UdpClient(port);
+                client.Connect(remoteEP);
 
-            RemoteAddress = address.ToString();
-            RemotePort = port;
-            IsOpen = true;
+                RemoteAddress = address.ToString();
+                RemotePort = port;
+                IsOpen = true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

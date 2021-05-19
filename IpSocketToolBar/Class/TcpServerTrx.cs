@@ -22,12 +22,12 @@ namespace IpSocketToolBar
         public event EventHandler Received = null;
 
         /// <summary>
-        /// クライアント側から接続されたとき
+        /// クライアントと接続されたとき
         /// </summary>
         public event EventHandler Connected = null;
 
         /// <summary>
-        /// クライアント側から切断されたとき
+        /// クライアンから切断されたとき
         /// </summary>
         public event EventHandler Disconnected = null;
 
@@ -44,10 +44,6 @@ namespace IpSocketToolBar
 
         #region 内部フィールド
 
-        // サーバのスレッド
-        Thread thread;
-        bool threadQuit = false;
-
         // TCPリスナ
         TcpListener listener = null;
 
@@ -56,30 +52,25 @@ namespace IpSocketToolBar
         #region 公開メソッド
 
         /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public TcpServerTrx()
-        {
-            IsOpen = false;
-        }
-
-        /// <summary>
         /// クライアントからの接続待ち受けを開始する
         /// </summary>
-        /// <param name="address">自分のIPアドレスまたはホスト名("localhost"など)</param>
+        /// <param name="address">自分のIPアドレスまたはホスト名</param>
         /// <param name="port">自分のポート番号</param>
-        public void Open(string address, int port)
+        /// <returns>成否</returns>
+        public bool Open(string address, int port)
         {
+            // IPアドレスの解釈
             IPAddress ipAddress;
-
-            try {
-                // IPアドレスの解釈
-                ipAddress = IPAddress.Parse(address);
-            } catch {
-                // ホスト名からIPアドレスを取得
-                ipAddress = Dns.GetHostEntry(address).AddressList[0];
+            if(!IPAddress.TryParse(address, out ipAddress))
+            {
+                try{
+                    // ホスト名からIPアドレスを取得
+                    ipAddress = Dns.GetHostEntry(address).AddressList[0];
+                }catch{
+                    return false;
+                }
             }
-            Open(ipAddress, port);
+            return Open(ipAddress, port);
         }
 
         /// <summary>
@@ -87,28 +78,38 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="address">自分のIPアドレス</param>
         /// <param name="port">自分のポート番号</param>
-        public void Open(IPAddress address, int port)
+        /// <returns>成否</returns>
+        public bool Open(IPAddress address, int port)
         {
-            // 待ち受けを開始
-            listener = new TcpListener(address, port);
-            listener.Server.SetSocketOption(
-                SocketOptionLevel.IP,
-                SocketOptionName.ReuseAddress, true); // ソケット再利用許可
-            listener.Server.SetSocketOption(
-                SocketOptionLevel.IP,
-                SocketOptionName.IpTimeToLive, this.TTL); // TTL(最大転送回数)
-            listener.Start();
+            try
+            {
+                // 自分のIPアドレスとポート番号
+                LocalAddress = address.ToString();
+                LocalPort = port;
 
-            // 自分のIPアドレスとポート番号
-            LocalAddress = address.ToString();
-            LocalPort = port;
-            Console.WriteLine("待ち受け開始 ({0}:{1})", LocalAddress, LocalPort);
+                // 待ち受けを開始
+                listener = new TcpListener(address, port);
+                listener.Server.SetSocketOption(
+                    SocketOptionLevel.IP,
+                    SocketOptionName.ReuseAddress, true); // ソケット再利用許可
+                listener.Server.SetSocketOption(
+                    SocketOptionLevel.IP,
+                    SocketOptionName.IpTimeToLive, this.TTL); // TTL(最大転送回数)
+                listener.Start();
 
-            // スレッドを開始
-            threadQuit = false;
-            thread = new Thread(new ThreadStart(threadFunc));
-            thread.Start();
-            IsOpen = true;
+                Console.WriteLine("TCPサーバ: 待ち受け開始 ({0}:{1})", LocalAddress, LocalPort);
+
+                // スレッドを開始
+                threadQuit = false;
+                thread = new Thread(new ThreadStart(threadFunc));
+                thread.Start();
+                IsOpen = true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -144,69 +145,64 @@ namespace IpSocketToolBar
 
         #region 内部メソッド
 
-        // サーバのスレッド関数
+        // スレッド関数
         private void threadFunc()
         {
-            while (!threadQuit)
+            while (!threadQuit) // 接続待ちループ
             {
-                try
-                {
-                    // クライアントからの接続を待ち受ける
-                    // ※ ブロッキング処理だが、this.Close()すれば例外発生して抜ける
+                // クライアントからの接続を待ち受ける
+                // ※ ブロッキング処理だが、this.Close()すれば例外発生して抜ける
+                try {
                     client = listener.AcceptTcpClient();
-
-                    // クライアントのIPアドレスとポート番号を取得
-                    RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
-                    RemotePort    = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
-                    Console.WriteLine("クライアント接続({0}:{1})", RemoteAddress, RemotePort);
-
-                    if (Connected != null) Connected(this, EventArgs.Empty);
-
-                    // クライアントのストリームを取得し、タイムアウト時間を設定
-                    networkStream = client.GetStream();
-                    networkStream.ReadTimeout = this.AliveTimeOut;
-                    networkStream.WriteTimeout = this.AliveTimeOut;
-
-                    // クライアントから送られたデータを受信する
-                    receivedPackets.Clear();
-                    byte[] data = new byte[1500];
-                    int size = 0;
-                    while(true)
-                    {
-                        // データを受信する
-                        // ※ ブロッキング処理だが、1パケット受信するごとに抜ける
-                        //    指定のlengthぶんデータがたまるのを待つわけではない
-                        //    何もパケットが来なければタイムアウトまで待つ
-                        // TODO this.Disconnect()で抜けるか要確認
-                        size = networkStream.Read(data, 0, data.Length);
-
-                        // Readが0を返したらクライアント側からの切断と判断。
-                        if (size == 0)
-                        {
-                            Console.WriteLine("クライアント切断"); // TODO
-                            if (Disconnected != null) {
-                                Disconnected(this, EventArgs.Empty);
-                            }
-                            this.Disconnect();
-                            break;
-                        }
-                        // 受信データあり。イベント発生
-                        else
-                        {
-                            receivedPackets.Enqueue(data);
-                            if (Received != null) Received(this, EventArgs.Empty);
-                        }
-                    }//while(true)
+                }catch{
+                    break; // this.Close()の場合
                 }
-                catch
+
+                // クライアントのIPアドレスとポート番号
+                RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
+                RemotePort = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
+                Console.WriteLine("TCPサーバ: クライアントと接続({0}:{1})", RemoteAddress, RemotePort);
+
+                if (Connected != null) Connected(this, EventArgs.Empty);
+
+                // クライアントのストリームを取得し、タイムアウト時間を設定
+                networkStream = client.GetStream();
+                networkStream.ReadTimeout = this.ReadTimeout;
+                networkStream.WriteTimeout = this.WriteTimeout;
+
+                // クライアントから送られたデータを受信する
+                receivedPackets.Clear();
+                byte[] data = new byte[1500];
+                int size = 0;
+                while (true) // 受信待ちループ
                 {
-                    if (!threadQuit)
-                    {
-                        Console.WriteLine("サーバスレッドで予期しない例外");
-                        this.Close();
+                    // データを受信する
+                    // ※ ブロッキング処理だが、1パケット受信するごとに抜ける
+                    //    (指定のlengthぶんデータがたまるのを待つわけではない)
+                    //    何もパケットが来なければタイムアウトまで待つ
+                    //    this.Close()すれば例外発生して抜ける
+                    try{
+                        size = networkStream.Read(data, 0, data.Length);
+                    }catch{
+                        break; // this.Close()の場合
                     }
-                }
-            }// while (!ServerThreadQuit)
+                    // Readが0を返したら切断されたと判断。
+                    if (size == 0)
+                    {
+                        Console.WriteLine("TCPサーバ: クライアント切断");
+                        if (Disconnected != null) Disconnected(this, EventArgs.Empty);
+                        this.Disconnect();
+                        break;
+                    }
+                    // 受信データあり。イベント発生
+                    else
+                    {
+                        receivedPackets.Enqueue(data);
+                        if (Received != null) Received(this, EventArgs.Empty);
+                    }
+                } // 受信待ちループ
+
+            }// 接続待ちループ
         }
 
         #endregion

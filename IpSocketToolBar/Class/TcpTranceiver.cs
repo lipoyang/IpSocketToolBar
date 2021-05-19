@@ -9,9 +9,9 @@ using System.Net.Sockets; // TcpClient, NetworkStream
 namespace IpSocketToolBar
 {
     /// <summary>
-    /// TCPクライアントのパケット送受信器 (TcpServerTrx, TcpClientTrx の基底クラス)
+    /// TCPパケット送受信器
     /// </summary>
-    public class TcpTranceiver
+    public abstract class TcpTranceiver
     {
         #region 公開プロパティ/フィールド
 
@@ -38,9 +38,13 @@ namespace IpSocketToolBar
         public bool IsOpen { get; protected set; }
 
         /// <summary>
-        /// 接続維持タイムアウト時間[ミリ秒]
+        /// 受信タイムアウト時間[ミリ秒]
         /// </summary>
-        public int AliveTimeOut = Timeout.Infinite;
+        public int ReadTimeout = Timeout.Infinite;
+        /// <summary>
+        /// 送信タイムアウト時間[ミリ秒]
+        /// </summary>
+        public int WriteTimeout = Timeout.Infinite;
 
         /// <summary>
         /// 受信ポーリング周期[ミリ秒]
@@ -55,12 +59,24 @@ namespace IpSocketToolBar
         protected TcpClient client = null;
         protected NetworkStream networkStream = null;
 
+        // サーバのスレッド
+        protected Thread thread;
+        protected bool threadQuit = false;
+
         // 受信パケットのキュー
         protected readonly Queue<byte[]> receivedPackets = new Queue<byte[]>();
 
         #endregion
 
         #region 公開メソッド
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public TcpTranceiver()
+        {
+            IsOpen = false;
+        }
 
         /// <summary>
         /// データを送信する
