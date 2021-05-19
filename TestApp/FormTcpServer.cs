@@ -29,6 +29,7 @@ namespace TestApp
         {
             // フォームのLoadイベントで開始処理を呼ぶ
             tcpServerToolStrip.Begin(@"SETTING.INI", this.Text);
+            //tcpServerToolStrip.Socket.ReadTimeout = 5000;
 
             // 受信スレッド開始
             threadRxQuit = false;

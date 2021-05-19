@@ -184,7 +184,8 @@ namespace IpSocketToolBar
                     try{
                         size = networkStream.Read(data, 0, data.Length);
                     }catch{
-                        break; // this.Close()の場合
+                        this.Disconnect(); 
+                        break; // this.Close()の場合, 受信タイムアウトの場合
                     }
                     // Readが0を返したら切断されたと判断。
                     if (size == 0)
