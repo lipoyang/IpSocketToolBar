@@ -37,6 +37,12 @@ namespace IpSocketToolBar
         /// 通信を開いているか？
         /// </summary>
         public bool IsOpen { get; protected set; }
+
+        /// <summary>
+        /// 自分の固定ポート番号
+        /// </summary>
+        public int? FixedLocalPort = null;
+
         #endregion
 
         #region 内部フィールド
@@ -89,16 +95,21 @@ namespace IpSocketToolBar
         {
             try
             {
-                // 送信相手
+                // 相手のIPアドレスとポート番号
                 IPEndPoint remoteEP = new IPEndPoint(address, port);
-
-                // UDPはコネクションレスなので、事前に接続先と接続を確立するわけではない。
-                // ただConnect()で送信先を指定しておくとSend()の引数に送信先を省略できる。
-                client = new UdpClient(port);
-                client.Connect(remoteEP);
-
                 RemoteAddress = address.ToString();
                 RemotePort = port;
+
+                // 自分のポート番号は固定か自動割り当てか
+                if (FixedLocalPort == null){
+                    client = new UdpClient();
+                }else{
+                    client = new UdpClient((int)FixedLocalPort);
+                }
+                // UDPはコネクションレスなので、事前に接続先と接続を確立するわけではない。
+                // ただConnect()で送信先を指定しておくとSend()の引数に送信先を省略できる。
+                client.Connect(remoteEP);
+
                 IsOpen = true;
                 return true;
             }

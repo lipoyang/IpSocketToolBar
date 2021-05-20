@@ -111,12 +111,13 @@ namespace IpSocketToolBar
         {
             try
             {
-                // 自分
+                // 自分のIPアドレスとポート番号
                 IPEndPoint localEP = new IPEndPoint(address, port);
-                client = new UdpClient(localEP);
-
                 LocalAddress = address.ToString();
                 LocalPort = port;
+                
+                client = new UdpClient(localEP);
+
 
                 // 受信パケットのキューをクリア
                 receivedPackets.Clear();
@@ -269,14 +270,14 @@ namespace IpSocketToolBar
             {
                 try
                 {
-                    //データを受信する (TODO ※Closeで即座に中断できるか？)
+                    //データを受信する (※ブロッキング処理だが、this.Close()で中断)
                     IPEndPoint remoteEP = null;
                     byte[] data = client.Receive(ref remoteEP);
 
                     // 相手(送信元)のIPアドレスとポート
                     RemoteAddress = remoteEP.Address.ToString();
                     RemotePort = remoteEP.Port;
-                    Console.WriteLine("送信元:{0}:{1}", RemoteAddress, RemotePort);
+                    //Console.WriteLine("UDP受信器: 送信元:{0}:{1}", RemoteAddress, RemotePort);
 
                     receivedPackets.Enqueue(data);
 

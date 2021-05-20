@@ -25,6 +25,7 @@ namespace TestApp
         {
             // フォームのLoadイベントで開始処理を呼ぶ
             udpSenderToolStrip.Begin(@"SETTING.INI", this.Text);
+            //udpSenderToolStrip.Socket.FixedLocalPort = 4567;
         }
 
         // 終了処理
