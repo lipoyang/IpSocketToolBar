@@ -21,21 +21,21 @@ namespace IpSocketToolBar
         #region イベント
 
         /// <summary>
-        /// サーバを開始した時のイベント
+        /// 開始した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
         public event EventHandler Opened = null;
 
         /// <summary>
-        /// サーバを停止した時のイベント
+        /// 停止した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
         public event EventHandler Closed = null;
 
         /// <summary>
-        /// クライアントと接続した時のイベント
+        /// 接続した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
@@ -46,7 +46,7 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// クライアントと切断した時のイベント
+        /// 切断した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
@@ -72,7 +72,7 @@ namespace IpSocketToolBar
         #region プロパティ
 
         /// <summary>
-        /// TCPサーバ
+        /// ソケット
         /// </summary>
         public TcpServerTrx Socket { get => socket; }
 
@@ -121,7 +121,7 @@ namespace IpSocketToolBar
         /// </summary>
         public void End()
         {
-            // TCPサーバが開始していたら停止する
+            // 開始していたら停止する
             try{
                 if (socket.IsOpen){
                     socket.Close();
@@ -169,15 +169,8 @@ namespace IpSocketToolBar
         string defaultIpAddress = "127.0.0.1";
         int defaultPort = 1234;
 
-        // TCPサーバ
+        // ソケット
         readonly TcpServerTrx socket = new TcpServerTrx();
-
-        // IPアドレスリストのドロップダウン時の処理
-        private void listIpAddress_DropDown(object sender, EventArgs e)
-        {
-            // IPアドレスリストの更新
-            updateIpAddressList();
-        }
 
         // 開始ボタンクリック時の処理
         private void buttonOpen_Click(object sender, EventArgs e)
@@ -261,6 +254,13 @@ namespace IpSocketToolBar
                 );
         }
 
+        // IPアドレスリストのドロップダウン時の処理
+        private void listIpAddress_DropDown(object sender, EventArgs e)
+        {
+            // IPアドレスリストの更新
+            updateIpAddressList();
+        }
+        
         // 自分のIPアドレスのリストの更新
         private void updateIpAddressList()
         {

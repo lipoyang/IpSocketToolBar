@@ -21,14 +21,14 @@ namespace IpSocketToolBar
         #region イベント
 
         /// <summary>
-        /// 受信器を開始した時のイベント
+        /// 開始した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
         public event EventHandler Opened = null;
 
         /// <summary>
-        /// 受信器を停止した時のイベント
+        /// 停止した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
@@ -50,7 +50,7 @@ namespace IpSocketToolBar
         #region プロパティ
 
         /// <summary>
-        /// UDP受信器
+        /// ソケット
         /// </summary>
         public UdpReceiver Socket { get => socket; }
 
@@ -96,7 +96,7 @@ namespace IpSocketToolBar
         /// </summary>
         public void End()
         {
-            // UDP受信器が開始していたら停止する
+            // 開始していたら停止する
             try{
                 if (socket.IsOpen){
                     socket.Close();
@@ -144,15 +144,8 @@ namespace IpSocketToolBar
         string defaultIpAddress = "127.0.0.1";
         int defaultPort = 1234;
 
-        // UDP受信器
+        // ソケット
         readonly　UdpReceiver socket = new UdpReceiver();
-
-        // IPアドレスリストのドロップダウン時の処理
-        private void listIpAddress_DropDown(object sender, EventArgs e)
-        {
-            // IPアドレスリストの更新
-            updateIpAddressList();
-        }
 
         // 開始ボタンクリック時の処理
         private void buttonOpen_Click(object sender, EventArgs e)
@@ -228,6 +221,13 @@ namespace IpSocketToolBar
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
                 );
+        }
+
+        // IPアドレスリストのドロップダウン時の処理
+        private void listIpAddress_DropDown(object sender, EventArgs e)
+        {
+            // IPアドレスリストの更新
+            updateIpAddressList();
         }
 
         // 自分のIPアドレスのリストの更新
