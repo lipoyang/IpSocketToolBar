@@ -33,6 +33,15 @@ namespace IpSocketToolBar
 
         #endregion
 
+        #region 公開プロパティ/フィールド
+
+        /// <summary>
+        /// 自分の固定ポート番号
+        /// </summary>
+        public int? FixedLocalPort = null;
+
+        #endregion
+
         #region 内部フィールド
 
         // デバッグ用
@@ -78,6 +87,14 @@ namespace IpSocketToolBar
             // 相手のIPアドレスとポート番号
             RemoteAddress = address.ToString();
             RemotePort = port;
+
+            // 自分のポート番号は固定か自動割り当てか
+            if(FixedLocalPort == null){
+                client = new TcpClient();
+            }else{
+                var localEP = new IPEndPoint(IPAddress.Any, (int)FixedLocalPort);
+                client = new TcpClient(localEP);
+            }
 
             Console.WriteLine(tag + "接続試行開始");
 
@@ -134,7 +151,6 @@ namespace IpSocketToolBar
                 //    また、接続失敗でも例外発生して抜ける
                 try
                 {
-                    client = new TcpClient();
                     client.Connect(RemoteAddress, RemotePort);
                 }catch{
                     if (!threadQuit){
@@ -150,7 +166,7 @@ namespace IpSocketToolBar
                 LocalPort     = ((IPEndPoint)client.Client.LocalEndPoint).Port;
                 RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                 RemotePort    = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
-                Console.WriteLine(tag + "クライアント({0}:{1})と接続({2}:{3})",
+                Console.WriteLine(tag + "サーバ({0}:{1})と接続({2}:{3})",
                     RemoteAddress, RemotePort, LocalAddress, LocalPort);
 
                 if (Connected != null) this.Connected(this, EventArgs.Empty); // 接続イベント発行

@@ -172,7 +172,7 @@ namespace IpSocketToolBar
                 LocalPort     = ((IPEndPoint)client.Client.LocalEndPoint).Port;
                 RemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                 RemotePort = ((IPEndPoint)client.Client.RemoteEndPoint).Port;
-                Console.WriteLine(tag + "サーバ({0}:{1})と接続({2}:{3})",
+                Console.WriteLine(tag + "クライアント({0}:{1})と接続({2}:{3})",
                     RemoteAddress, RemotePort, LocalAddress, LocalPort);
 
                 if (Connected != null) this.Connected(this, EventArgs.Empty); // 接続イベント発行

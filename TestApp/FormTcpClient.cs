@@ -29,6 +29,7 @@ namespace TestApp
         {
             // フォームのLoadイベントで開始処理を呼ぶ
             tcpClientToolStrip.Begin(@"SETTING.INI", this.Text);
+            //tcpClientToolStrip.Socket.FixedLocalPort = 4567;
 
             // 受信スレッド開始
             threadRxQuit = false;
