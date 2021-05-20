@@ -67,7 +67,7 @@ namespace IpSocketToolBar
             InitializeComponent();
 
             // 表示状態の初期化
-            listIpAddress.Enabled = true;
+            textIpAddress.Enabled = true;
             textPort.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
@@ -152,7 +152,7 @@ namespace IpSocketToolBar
         {
             // IPアドレス/ホスト名のチェック
             IPAddress ipAddress;
-            string ipAddressStr = listIpAddress.Text;
+            string ipAddressStr = textIpAddress.Text;
             if (ipAddressStr == ""){
                 showErrorMessage("IPアドレスを選択してください");
                 return;
@@ -186,7 +186,7 @@ namespace IpSocketToolBar
             defaultIpAddress = ipAddressStr;
             defaultPort = port;
 
-            listIpAddress.Enabled = false;
+            textIpAddress.Enabled = false;
             textPort.Enabled = false;
             buttonOpen.Enabled = false;
             buttonClose.Enabled = true;
@@ -203,7 +203,7 @@ namespace IpSocketToolBar
             // ポートを閉じる
             socket.Close();
 
-            listIpAddress.Enabled = true;
+            textIpAddress.Enabled = true;
             textPort.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
@@ -248,15 +248,15 @@ namespace IpSocketToolBar
             ipAddressList.Add("0.0.0.0");
 
             // COMポートリストの更新
-            listIpAddress.Items.Clear();
-            listIpAddress.Items.AddRange(ipAddressList.ToArray());
+            textIpAddress.Items.Clear();
+            textIpAddress.Items.AddRange(ipAddressList.ToArray());
 
             // 既定値を選択
-            listIpAddress.SelectedItem = defaultIpAddress;
+            textIpAddress.SelectedItem = defaultIpAddress;
             // 無ければ0番目の項目を選択
-            if ((string)listIpAddress.SelectedItem != defaultIpAddress)
+            if ((string)textIpAddress.SelectedItem != defaultIpAddress)
             {
-                listIpAddress.SelectedIndex = 0;
+                textIpAddress.SelectedIndex = 0;
             }
         }
 
@@ -265,7 +265,7 @@ namespace IpSocketToolBar
         {
             int h = this.Font.Height;
             Size size1 = new Size(h * 8, h);
-            listIpAddress.Size = size1;
+            textIpAddress.Size = size1;
             Size size2 = new Size(h * 3, h);
             textPort.Size = size2;
 
@@ -275,7 +275,7 @@ namespace IpSocketToolBar
         // フォント変更時の処理
         protected override void OnFontChanged(EventArgs e)
         {
-            listIpAddress.Font = this.Font;
+            textIpAddress.Font = this.Font;
             textPort.Font = this.Font;
 
             base.OnFontChanged(e);
@@ -298,7 +298,7 @@ namespace IpSocketToolBar
         #region 初期化処理(デザイナーの生成コードから流用)
 
         // IPアドレスリスト
-        ToolStripComboBox listIpAddress;
+        ToolStripComboBox textIpAddress;
         // ポート番号ボックス
         ToolStripTextBox textPort;
         // 開始ボタン
@@ -309,7 +309,7 @@ namespace IpSocketToolBar
         // コンポーネントの初期化
         private void InitializeComponent()
         {
-            this.listIpAddress = new ToolStripComboBox();
+            this.textIpAddress = new ToolStripComboBox();
             this.textPort = new ToolStripTextBox();
             this.buttonOpen = new ToolStripButton();
             this.buttonClose = new ToolStripButton();
@@ -318,10 +318,10 @@ namespace IpSocketToolBar
             var labelIpAddress = new ToolStripLabel("自分のアドレス");
             var labelPort = new ToolStripLabel("ポート番号");
 
-            this.listIpAddress.DropDownStyle = ComboBoxStyle.DropDownList; // 編集不可
-            this.listIpAddress.DropDown += listIpAddress_DropDown;
-            this.listIpAddress.ToolTipText = "自分のIPアドレスの選択";
-            this.listIpAddress.Items.Clear();
+            this.textIpAddress.DropDownStyle = ComboBoxStyle.DropDownList; // 編集不可
+            this.textIpAddress.DropDown += listIpAddress_DropDown;
+            this.textIpAddress.ToolTipText = "自分のIPアドレスの選択";
+            this.textIpAddress.Items.Clear();
 
             this.textPort.ToolTipText = "ポート番号の指定";
             this.textPort.Text = "";
@@ -335,7 +335,7 @@ namespace IpSocketToolBar
             this.buttonClose.Click += buttonClose_Click;
 
             this.Items.Add(labelIpAddress);
-            this.Items.Add(listIpAddress);
+            this.Items.Add(textIpAddress);
             this.Items.Add(labelPort);
             this.Items.Add(textPort);
             this.Items.Add(buttonOpen);

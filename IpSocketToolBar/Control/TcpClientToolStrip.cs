@@ -92,7 +92,7 @@ namespace IpSocketToolBar
             this.socket.Disconnected += socket_Disconnect;
 
             // 表示状態の初期化
-            listIpAddress.Enabled = true;
+            textIpAddress.Enabled = true;
             textPort.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
@@ -112,7 +112,7 @@ namespace IpSocketToolBar
             defaultPort = iniFile.ReadInteger(iniSection, "PORT", 1234);
 
             // IPアドレスリストの更新
-            listIpAddress.Text = defaultIpAddress;
+            textIpAddress.Text = defaultIpAddress;
             textPort.Text = defaultPort.ToString();
         }
 
@@ -177,7 +177,7 @@ namespace IpSocketToolBar
         {
             // IPアドレス/ホスト名のチェック
             IPAddress ipAddress;
-            string ipAddressStr = listIpAddress.Text;
+            string ipAddressStr = textIpAddress.Text;
             if (ipAddressStr == ""){
                 showErrorMessage("IPアドレスを選択してください");
                 return;
@@ -211,7 +211,7 @@ namespace IpSocketToolBar
             defaultIpAddress = ipAddressStr;
             defaultPort = port;
 
-            listIpAddress.Enabled = false;
+            textIpAddress.Enabled = false;
             textPort.Enabled = false;
             buttonOpen.Enabled = false;
             buttonClose.Enabled = true;
@@ -228,7 +228,7 @@ namespace IpSocketToolBar
             // ポートを閉じる
             socket.Close();
 
-            listIpAddress.Enabled = true;
+            textIpAddress.Enabled = true;
             textPort.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
@@ -241,7 +241,7 @@ namespace IpSocketToolBar
         private void socket_Disconnect(object sender, EventArgs e)
         {
             this.BeginInvoke((Action)(() => {
-                listIpAddress.Enabled = true;
+                textIpAddress.Enabled = true;
                 textPort.Enabled = true;
                 buttonOpen.Enabled = true;
                 buttonClose.Enabled = false;
@@ -264,7 +264,7 @@ namespace IpSocketToolBar
         {
             int h = this.Font.Height;
             Size size1 = new Size(h * 8, h);
-            listIpAddress.Size = size1;
+            textIpAddress.Size = size1;
             Size size2 = new Size(h * 3, h);
             textPort.Size = size2;
 
@@ -274,7 +274,7 @@ namespace IpSocketToolBar
         // フォント変更時の処理
         protected override void OnFontChanged(EventArgs e)
         {
-            listIpAddress.Font = this.Font;
+            textIpAddress.Font = this.Font;
             textPort.Font = this.Font;
 
             base.OnFontChanged(e);
@@ -296,8 +296,8 @@ namespace IpSocketToolBar
 
         #region 初期化処理(デザイナーの生成コードから流用)
 
-        // IPアドレスリスト
-        ToolStripComboBox listIpAddress;
+        // IPアドレスボックス
+        ToolStripTextBox textIpAddress;
         // ポート番号ボックス
         ToolStripTextBox textPort;
         // 開始ボタン
@@ -308,7 +308,7 @@ namespace IpSocketToolBar
         // コンポーネントの初期化
         private void InitializeComponent()
         {
-            this.listIpAddress = new ToolStripComboBox();
+            this.textIpAddress = new ToolStripTextBox();
             this.textPort = new ToolStripTextBox();
             this.buttonOpen = new ToolStripButton();
             this.buttonClose = new ToolStripButton();
@@ -317,9 +317,8 @@ namespace IpSocketToolBar
             var labelIpAddress = new ToolStripLabel("相手のアドレス");
             var labelPort = new ToolStripLabel("ポート番号");
 
-            this.listIpAddress.Text = "";
-            this.listIpAddress.ToolTipText = "相手のIPアドレスの指定";
-            this.listIpAddress.Items.Clear();
+            this.textIpAddress.ToolTipText = "相手のIPアドレスの指定";
+            this.textIpAddress.Text = "";
 
             this.textPort.ToolTipText = "ポート番号の指定";
             this.textPort.Text = "";
@@ -333,7 +332,7 @@ namespace IpSocketToolBar
             this.buttonClose.Click += buttonClose_Click;
 
             this.Items.Add(labelIpAddress);
-            this.Items.Add(listIpAddress);
+            this.Items.Add(textIpAddress);
             this.Items.Add(labelPort);
             this.Items.Add(textPort);
             this.Items.Add(buttonOpen);
