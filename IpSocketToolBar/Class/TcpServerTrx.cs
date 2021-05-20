@@ -192,12 +192,19 @@ namespace IpSocketToolBar
                     // ※ ブロッキング処理だが、1パケット受信するごとに抜ける
                     //    (指定のlengthぶんデータがたまるのを待つわけではない)
                     //    何もパケットが来なければタイムアウトまで待つ
-                    //    this.Close()すれば例外発生して抜ける
-                    try{
+                    //    this.Close()/this.Disconnect()すれば例外発生して抜ける
+                    try
+                    {
                         size = networkStream.Read(data, 0, data.Length);
                     }catch{
-                        if(!threadQuit) Console.WriteLine(tag + "受信待ちタイムアウト");
-                        break; // this.Close() or 受信タイムアウトの場合
+                        if (!threadQuit){
+                            if(networkStream == null){
+                                Console.WriteLine(tag + "自分側からの切断");
+                            }else{
+                                Console.WriteLine(tag + "受信待ちタイムアウト");
+                            }
+                        }
+                        break; // this.Close() or this.Disconnect() or 受信タイムアウトの場合
                     }
                     // Readが0を返したら切断されたと判断。
                     if (size == 0)
