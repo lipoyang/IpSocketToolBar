@@ -88,6 +88,9 @@ namespace IpSocketToolBar
             // コンポーネントの初期化
             InitializeComponent();
 
+            // ソケットの切断イベントハンドラ
+            this.socket.Disconnected += socket_Disconnect;
+
             // 表示状態の初期化
             listIpAddress.Enabled = true;
             textPort.Enabled = true;
@@ -177,21 +180,25 @@ namespace IpSocketToolBar
         }
 
         // 開始ボタンクリック時の処理
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void buttonOpen_Click(object sender, EventArgs e)
         {
-            // IPアドレスのチェック
+            // IPアドレス/ホスト名のチェック
             IPAddress ipAddress;
             string ipAddressStr = listIpAddress.Text;
             if (ipAddressStr == ""){
                 showErrorMessage("IPアドレスを選択してください");
                 return;
-            }
-            else{
-                try{
-                    ipAddress = IPAddress.Parse(ipAddressStr);
-                }catch{
-                    showErrorMessage("IPアドレスが不正です");
-                    return;
+            }else{
+                // IPアドレスの文字列か？
+                if (!IPAddress.TryParse(ipAddressStr, out ipAddress)){
+                    try{
+                        // ホスト名から(IPv4の)IPアドレスを取得
+                        var list = Dns.GetHostEntry(ipAddressStr).AddressList;
+                        ipAddress = list.First(a => a.AddressFamily == AddressFamily.InterNetwork);
+                    }catch{
+                        showErrorMessage("IPアドレスまたはホスト名が不正です");
+                        return;
+                    }
                 }
             }
 
@@ -201,8 +208,11 @@ namespace IpSocketToolBar
                 showErrorMessage("ポート番号が不正です");
                 return;
             }
-            // ポートを開く
-            socket.Open(ipAddressStr, port);
+            // ソケットを開く
+            if(!socket.Open(ipAddress, port)){
+                showErrorMessage("ソケットが開けません");
+                return;
+            }
 
             // IPアドレスとポート番号を更新 (ここで毎回ファイル保存はしない)
             defaultIpAddress = ipAddressStr;
@@ -220,7 +230,7 @@ namespace IpSocketToolBar
         }
 
         // 停止ボタンクリック時の処理
-        private void buttonStop_Click(object sender, EventArgs e)
+        private void buttonClose_Click(object sender, EventArgs e)
         {
             // ポートを閉じる
             socket.Close();
@@ -232,6 +242,12 @@ namespace IpSocketToolBar
 
             // イベント発行
             if (Stopped != null) Stopped(this, EventArgs.Empty);
+        }
+
+        // 接続が切断したとき
+        private void socket_Disconnect(object sender, EventArgs e)
+        {
+
         }
 
         // エラーメッセージの表示
@@ -343,11 +359,11 @@ namespace IpSocketToolBar
 
             this.buttonOpen.Text = "開始";
             this.buttonOpen.ToolTipText = "開始";
-            this.buttonOpen.Click += buttonStart_Click;
+            this.buttonOpen.Click += buttonOpen_Click;
 
             this.buttonClose.Text = "停止";
             this.buttonClose.ToolTipText = "停止";
-            this.buttonClose.Click += buttonStop_Click;
+            this.buttonClose.Click += buttonClose_Click;
 
             this.Items.Add(labelIpAddress);
             this.Items.Add(listIpAddress);

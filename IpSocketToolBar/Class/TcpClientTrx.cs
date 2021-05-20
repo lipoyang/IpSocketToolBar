@@ -56,8 +56,9 @@ namespace IpSocketToolBar
             if (!IPAddress.TryParse(address, out ipAddress))
             {
                 try{
-                    // ホスト名からIPアドレスを取得
-                    ipAddress = Dns.GetHostEntry(address).AddressList[0];
+                    // ホスト名から(IPv4の)IPアドレスを取得
+                    var list = Dns.GetHostEntry(address).AddressList;
+                    ipAddress = list.First(a => a.AddressFamily == AddressFamily.InterNetwork);
                 }catch{
                     return false;
                 }
@@ -130,10 +131,17 @@ namespace IpSocketToolBar
             {
                 // サーバへの接続を試行する
                 // ※ ブロッキング処理だが、this.Close()すれば例外発生して抜ける
-                try{
+                //    また、接続失敗でも例外発生して抜ける
+                try
+                {
                     client = new TcpClient();
                     client.Connect(RemoteAddress, RemotePort);
                 }catch{
+                    if (!threadQuit){
+                        threadQuit = true;
+                        Console.WriteLine(tag + "接続失敗");
+                        if (Disconnected != null) Disconnected(this, EventArgs.Empty); // 切断イベント発行
+                    }
                     break; // this.Close()の場合
                 }
 

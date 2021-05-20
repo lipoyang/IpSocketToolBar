@@ -91,8 +91,9 @@ namespace IpSocketToolBar
             if (!IPAddress.TryParse(address, out ipAddress))
             {
                 try{
-                    // ホスト名からIPアドレスを取得
-                    ipAddress = Dns.GetHostEntry(address).AddressList[0];
+                    // ホスト名から(IPv4の)IPアドレスを取得
+                    var list = Dns.GetHostEntry(address).AddressList;
+                    ipAddress = list.First(a => a.AddressFamily == AddressFamily.InterNetwork);
                 }catch{
                     return false;
                 }
