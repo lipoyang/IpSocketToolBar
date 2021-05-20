@@ -24,14 +24,14 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Started = null;
+        public event EventHandler Opened = null;
 
         /// <summary>
         /// 送信器を停止した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Stopped = null;
+        public event EventHandler Closed = null;
 
         #endregion
 
@@ -180,7 +180,7 @@ namespace IpSocketToolBar
             buttonClose.Enabled = true;
 
             // イベント発行
-            if(Started != null) Started(this, EventArgs.Empty);
+            if(Opened != null) Opened(this, EventArgs.Empty);
 
             this.Update(); // 受信が始まるので念のために強制的に表示更新
         }
@@ -197,7 +197,7 @@ namespace IpSocketToolBar
             buttonClose.Enabled = false;
 
             // イベント発行
-            if (Stopped != null) Stopped(this, EventArgs.Empty);
+            if (Closed != null) Closed(this, EventArgs.Empty);
         }
 
         // エラーメッセージの表示

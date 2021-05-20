@@ -21,18 +21,18 @@ namespace IpSocketToolBar
         #region イベント
 
         /// <summary>
-        /// 接続待ち受けを開始した時のイベント
+        /// サーバを開始した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Started = null;
+        public event EventHandler Opened = null;
 
         /// <summary>
-        /// 接続待ち受けを停止した時のイベント
+        /// サーバを停止した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Stopped = null;
+        public event EventHandler Closed = null;
 
         /// <summary>
         /// クライアントと接続した時のイベント
@@ -46,7 +46,7 @@ namespace IpSocketToolBar
         }
 
         /// <summary>
-        /// クライアントと切断された時のイベント
+        /// クライアントと切断した時のイベント
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
@@ -224,7 +224,7 @@ namespace IpSocketToolBar
             buttonClose.Enabled = true;
 
             // イベント発行
-            if(Started != null) Started(this, EventArgs.Empty);
+            if(Opened != null) Opened(this, EventArgs.Empty);
 
             this.Update(); // 受信が始まるので念のために強制的に表示更新
         }
@@ -241,7 +241,7 @@ namespace IpSocketToolBar
             buttonClose.Enabled = false;
 
             // イベント発行
-            if (Stopped != null) Stopped(this, EventArgs.Empty);
+            if (Closed != null) Closed(this, EventArgs.Empty);
         }
 
         // 接続が切断したとき
