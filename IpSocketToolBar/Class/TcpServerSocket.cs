@@ -12,7 +12,7 @@ namespace IpSocketToolBar
     /// <summary>
     /// TCPサーバのパケット送受信器
     /// </summary>
-    public class TcpServerTrx : TcpTranceiver
+    public class TcpServerSocket : TcpSocket
     {
         #region イベント
 
@@ -33,7 +33,7 @@ namespace IpSocketToolBar
 
         #endregion
 
-        #region 公開プロパティ/フィールド
+        #region 公開フィールド
 
         /// <summary>
         /// TTL(最大転送回数) 255までの整数

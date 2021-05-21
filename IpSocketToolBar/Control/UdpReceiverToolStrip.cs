@@ -52,7 +52,7 @@ namespace IpSocketToolBar
         /// <summary>
         /// ソケット
         /// </summary>
-        public UdpReceiver Socket { get => socket; }
+        public UdpReceiverSocket Socket { get => socket; }
 
         #endregion
 
@@ -145,7 +145,7 @@ namespace IpSocketToolBar
         int defaultPort = 1234;
 
         // ソケット
-        readonly　UdpReceiver socket = new UdpReceiver();
+        readonly　UdpReceiverSocket socket = new UdpReceiverSocket();
 
         // 開始ボタンクリック時の処理
         private void buttonOpen_Click(object sender, EventArgs e)

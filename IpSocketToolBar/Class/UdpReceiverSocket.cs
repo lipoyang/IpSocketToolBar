@@ -12,7 +12,7 @@ namespace IpSocketToolBar
     /// <summary>
     /// UDPパケット受信器
     /// </summary>
-    public class UdpReceiver
+    public class UdpReceiverSocket : IpSocket
     {
         #region イベント
 
@@ -23,29 +23,7 @@ namespace IpSocketToolBar
 
         #endregion
 
-        #region 公開プロパティ/フィールド
-
-        /// <summary>
-        /// 自分のIPアドレス (読み取り専用)
-        /// </summary>
-        public string LocalAddress { protected set; get; }
-        /// <summary>
-        /// 自分のポート番号 (読み取り専用)
-        /// </summary>
-        public int LocalPort { protected set; get; }
-        /// <summary>
-        /// 相手のIPアドレス (読み取り専用)
-        /// </summary>
-        public string RemoteAddress { protected set; get; }
-        /// <summary>
-        /// 相手のポート番号 (読み取り専用)
-        /// </summary>
-        public int RemotePort { protected set; get; }
-
-        /// <summary>
-        /// 通信を開いているか？
-        /// </summary>
-        public bool IsOpen { get; protected set; }
+        #region 公開フィールド
 
         /// <summary>
         /// 受信ポーリング周期[ミリ秒]
@@ -69,14 +47,6 @@ namespace IpSocketToolBar
         #endregion
 
         #region 公開メソッド
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public UdpReceiver()
-        {
-            IsOpen = false;
-        }
 
         /// <summary>
         /// 受信器を開始する

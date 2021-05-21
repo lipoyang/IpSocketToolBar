@@ -40,7 +40,7 @@ namespace IpSocketToolBar
         /// <summary>
         /// ソケット
         /// </summary>
-        public UdpSender Socket { get => socket; }
+        public UdpSenderSocket Socket { get => socket; }
 
         #endregion
 
@@ -133,7 +133,7 @@ namespace IpSocketToolBar
         int defaultPort = 1234;
 
         // ソケット
-        readonly UdpSender socket = new UdpSender();
+        readonly UdpSenderSocket socket = new UdpSenderSocket();
 
         // 開始ボタンクリック時の処理
         private void buttonOpen_Click(object sender, EventArgs e)

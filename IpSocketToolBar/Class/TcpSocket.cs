@@ -11,31 +11,9 @@ namespace IpSocketToolBar
     /// <summary>
     /// TCPパケット送受信器
     /// </summary>
-    public abstract class TcpTranceiver
+    public abstract class TcpSocket : IpSocket
     {
-        #region 公開プロパティ/フィールド
-
-        /// <summary>
-        /// 自分のIPアドレス (読み取り専用)
-        /// </summary>
-        public string LocalAddress { protected set; get; }
-        /// <summary>
-        /// 自分のポート番号 (読み取り専用)
-        /// </summary>
-        public int LocalPort { protected set; get; }
-        /// <summary>
-        /// 相手のIPアドレス (読み取り専用)
-        /// </summary>
-        public string RemoteAddress { protected set; get; }
-        /// <summary>
-        /// 相手のポート番号 (読み取り専用)
-        /// </summary>
-        public int RemotePort { protected set; get; }
-
-        /// <summary>
-        /// 通信を開いているか？
-        /// </summary>
-        public bool IsOpen { get; protected set; }
+        #region 公開フィールド
 
         /// <summary>
         /// 受信タイムアウト時間[ミリ秒]
@@ -69,14 +47,6 @@ namespace IpSocketToolBar
         #endregion
 
         #region 公開メソッド
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public TcpTranceiver()
-        {
-            IsOpen = false;
-        }
 
         /// <summary>
         /// データを送信する

@@ -12,7 +12,7 @@ namespace IpSocketToolBar
     /// <summary>
     /// TCPクライアントのパケット送受信器
     /// </summary>
-    public class TcpClientTrx : TcpTranceiver
+    public class TcpClientSocket : TcpSocket
     {
         #region イベント
 
@@ -33,7 +33,7 @@ namespace IpSocketToolBar
 
         #endregion
 
-        #region 公開プロパティ/フィールド
+        #region 公開フィールド
 
         /// <summary>
         /// 自分の固定ポート番号

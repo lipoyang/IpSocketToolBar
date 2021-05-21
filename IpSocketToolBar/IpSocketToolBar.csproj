@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\IpSocket.cs" />
     <Compile Include="Control\StatusToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -50,18 +51,18 @@
     <Compile Include="Control\TcpClientToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Class\TcpClientTrx.cs" />
+    <Compile Include="Class\TcpClientSocket.cs" />
     <Compile Include="Control\TcpServerToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Class\TcpServerTrx.cs" />
+    <Compile Include="Class\TcpServerSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Class\TcpTranceiver.cs" />
-    <Compile Include="Class\UdpReceiver.cs" />
+    <Compile Include="Class\TcpSocket.cs" />
+    <Compile Include="Class\UdpReceiverSocket.cs" />
     <Compile Include="Control\UdpReceiverToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Class\UdpSender.cs" />
+    <Compile Include="Class\UdpSenderSocket.cs" />
     <Compile Include="Control\UdpSenderToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>

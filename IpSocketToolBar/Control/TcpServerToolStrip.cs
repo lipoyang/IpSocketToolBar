@@ -74,7 +74,7 @@ namespace IpSocketToolBar
         /// <summary>
         /// ソケット
         /// </summary>
-        public TcpServerTrx Socket { get => socket; }
+        public TcpServerSocket Socket { get => socket; }
 
         #endregion
 
@@ -170,7 +170,7 @@ namespace IpSocketToolBar
         int defaultPort = 1234;
 
         // ソケット
-        readonly TcpServerTrx socket = new TcpServerTrx();
+        readonly TcpServerSocket socket = new TcpServerSocket();
 
         // 開始ボタンクリック時の処理
         private void buttonOpen_Click(object sender, EventArgs e)
