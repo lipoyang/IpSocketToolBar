@@ -192,7 +192,7 @@ namespace IpSocketToolBar
             buttonClose.Enabled = true;
 
             // イベント発行
-            if(Opened != null) Opened(this, EventArgs.Empty);
+            Opened?.Invoke(this, EventArgs.Empty);
 
             this.Update(); // 受信が始まるので念のために強制的に表示更新
         }
@@ -209,7 +209,7 @@ namespace IpSocketToolBar
             buttonClose.Enabled = false;
 
             // イベント発行
-            if (Closed != null) Closed(this, EventArgs.Empty);
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         // エラーメッセージの表示

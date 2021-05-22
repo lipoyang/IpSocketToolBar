@@ -33,17 +33,10 @@ namespace IpSocketToolBar
 
         #region 内部フィールド
 
+        // TCPソケット
+        internal TcpSocket tcpSocket = null;
         // サーバか？
         internal bool isServer = false;
-
-        // ソケットの状態
-        enum IpSocketStatus
-        {
-            Closed,
-            Opened,
-            Connected
-        }
-        IpSocketStatus status = IpSocketStatus.Closed;
 
         // ロック用
         readonly object lockObj = new object();
@@ -75,11 +68,7 @@ namespace IpSocketToolBar
         {
             lock (lockObj)
             {
-                if(status == IpSocketStatus.Closed)
-                {
-                    setText(isServer ? "接続待ち" : "接続試行");
-                    status = IpSocketStatus.Opened;
-                }
+                updataStatusBar();
             }
         }
 
@@ -90,16 +79,8 @@ namespace IpSocketToolBar
         {
             lock (lockObj)
             {
-                if(status == IpSocketStatus.Connected)
-                {
-                    setText("切断", "自分側から切断しました");
-                    waitDo(() => {
-                        if (status == IpSocketStatus.Closed) setText("停止中");
-                    });
-                }else{
-                    setText("停止中");
-                }
-                status = IpSocketStatus.Closed;
+                if (disconnetedNow) return; // 切断メッセージ表示中はスキップ
+                updataStatusBar();
             }
         }
 
@@ -112,15 +93,11 @@ namespace IpSocketToolBar
         {
             lock (lockObj)
             {
-                string text = isServer ? "相手のアドレス " : "自分のアドレス ";
-                text += address;
-                text += " ポート番号 ";
-                text += port.ToString();
-                setText("接続済み", text);
-
-                status = IpSocketStatus.Connected;
+                updataStatusBar();
             }
         }
+
+        bool disconnetedNow = false;
 
         /// <summary>
         /// ソケットが切断したとき
@@ -130,6 +107,7 @@ namespace IpSocketToolBar
         {
             lock (lockObj)
             {
+                disconnetedNow = true;
                 string text = "";
                 switch (reason)
                 {
@@ -149,22 +127,40 @@ namespace IpSocketToolBar
                 setText("切断", text);
 
                 waitDo(() => {
-                    if (isServer){
-                        if (status == IpSocketStatus.Opened) setText("接続待ち");
-                    }else{
-                        if (status == IpSocketStatus.Closed) setText("停止中");
-                    }
+                    disconnetedNow = false;
+                    updataStatusBar();
                 });
-
-                // サーバは切断しても閉じない。クライアントは切断したら閉じる
-                status = isServer ? IpSocketStatus.Opened : IpSocketStatus.Closed;
             }
         }
         #endregion
 
         #region 内部メソッド (private)
 
-        // ステータスの表示
+        // ステータス表示更新
+        private void updataStatusBar()
+        {
+            if (tcpSocket.IsOpen)
+            {
+                if (tcpSocket.IsConnected)
+                {
+                    string text = isServer ? "相手のアドレス " : "自分のアドレス ";
+                    text += isServer ? tcpSocket.RemoteAddress : tcpSocket.LocalAddress;
+                    text += " ポート番号 ";
+                    text += (isServer ? tcpSocket.RemotePort : tcpSocket.LocalPort).ToString();
+                    setText("接続済み", text);
+                }
+                else
+                {
+                    setText(isServer ? "接続待ち" : "接続試行中");
+                }
+            }
+            else
+            {
+                setText("停止中");
+            }
+        }
+
+        // ステータス表示の文字列を設定
         private void setText(string mainStatus, string subStatus ="")
         {
             this.BeginInvoke((Action)(() => {
@@ -172,8 +168,6 @@ namespace IpSocketToolBar
                 textSubStatus.Text = subStatus;
             }));
         }
-
-        System.Timers.Timer timer2;
 
         // 一定時間後に実行(表示更新用)
         private void waitDo(Action action)

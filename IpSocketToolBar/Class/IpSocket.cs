@@ -31,7 +31,7 @@ namespace IpSocketToolBar
         public int RemotePort { protected set; get; }
 
         /// <summary>
-        /// 通信を開いているか？
+        /// ソケットを開いているか？
         /// </summary>
         public bool IsOpen { get; protected set; }
 

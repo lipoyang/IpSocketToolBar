@@ -87,7 +87,8 @@ namespace IpSocketToolBar
             set
             {
                 statusBar = value;
-                if(statusBar != null) statusBar.isServer = true;
+                if (statusBar != null) statusBar.isServer = true;
+                if (statusBar != null) statusBar.tcpSocket = socket;
             }
         }
         StatusToolStrip statusBar = null;

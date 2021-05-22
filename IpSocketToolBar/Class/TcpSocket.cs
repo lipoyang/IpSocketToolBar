@@ -16,6 +16,11 @@ namespace IpSocketToolBar
         #region 公開プロパティ/フィールド
 
         /// <summary>
+        /// ソケットが相手と接続されているか
+        /// </summary>
+        public bool IsConnected { get; protected set; }
+
+        /// <summary>
         /// 切断した原因
         /// </summary>
         public DisconnectReason DisconnectReason

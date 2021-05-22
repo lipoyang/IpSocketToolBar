@@ -174,7 +174,8 @@ namespace IpSocketToolBar
                 Console.WriteLine(tag + "クライアント({0}:{1})と接続({2}:{3})",
                     RemoteAddress, RemotePort, LocalAddress, LocalPort);
 
-                if (Connected != null) this.Connected(this, EventArgs.Empty); // 接続イベント発行
+                IsConnected = true;
+                Connected?.Invoke(this, EventArgs.Empty); // 接続イベント発行
 
                 // クライアントのストリームを取得し、タイムアウト時間を設定
                 networkStream = client.GetStream();
@@ -232,6 +233,7 @@ namespace IpSocketToolBar
                 this.Disconnect();
                 Console.WriteLine(tag + "切断完了");
 
+                IsConnected = false;
                 Disconnected?.Invoke(this, EventArgs.Empty); // 切断イベント発行
 
             } // 接続待ちループ
