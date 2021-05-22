@@ -76,6 +76,21 @@ namespace IpSocketToolBar
         /// </summary>
         public TcpServerSocket Socket { get => socket; }
 
+        /// <summary>
+        /// ステータスバー
+        /// </summary>
+        public StatusToolStrip StatusBar
+        {
+            get => statusBar;
+            set
+            {
+                statusBar = value;
+                statusBar.isServer = false;
+                statusBar.Closed();
+            }
+        }
+        StatusToolStrip statusBar = null;
+
         #endregion
 
         #region 公開メソッド

@@ -76,6 +76,21 @@ namespace IpSocketToolBar
         /// </summary>
         public TcpClientSocket Socket { get => socket; }
 
+        /// <summary>
+        /// ステータスバー
+        /// </summary>
+        public StatusToolStrip StatusBar
+        {
+            get => statusBar;
+            set
+            {
+                statusBar = value;
+                statusBar.isServer = false;
+                statusBar.Closed();
+            }
+        }
+        StatusToolStrip statusBar = null;
+
         #endregion
 
         #region 公開メソッド
@@ -240,6 +255,8 @@ namespace IpSocketToolBar
         // 接続が切断したとき
         private void socket_Disconnect(object sender, EventArgs e)
         {
+            // statusBar?.Disconnected();
+
             this.BeginInvoke((Action)(() => {
                 textIpAddress.Enabled = true;
                 textPort.Enabled = true;
