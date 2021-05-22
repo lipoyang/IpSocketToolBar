@@ -104,6 +104,7 @@ namespace IpSocketToolBar
             InitializeComponent();
 
             // ソケットの切断イベントハンドラ
+            this.socket.Connected += socket_Connect;
             this.socket.Disconnected += socket_Disconnect;
 
             // 表示状態の初期化
@@ -230,9 +231,10 @@ namespace IpSocketToolBar
             textPort.Enabled = false;
             buttonOpen.Enabled = false;
             buttonClose.Enabled = true;
+            statusBar?.Opened();
 
             // イベント発行
-            if(Opened != null) Opened(this, EventArgs.Empty);
+            Opened?.Invoke(this, EventArgs.Empty);
 
             this.Update(); // 受信が始まるので念のために強制的に表示更新
         }
@@ -247,15 +249,22 @@ namespace IpSocketToolBar
             textPort.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
+            statusBar?.Closed();
 
             // イベント発行
-            if (Closed != null) Closed(this, EventArgs.Empty);
+            Closed?.Invoke(this, EventArgs.Empty);
+        }
+
+        // 接続したとき
+        private void socket_Connect(object sender, EventArgs e)
+        {
+            statusBar?.Connected(socket.LocalAddress, socket.LocalPort);
         }
 
         // 接続が切断したとき
         private void socket_Disconnect(object sender, EventArgs e)
         {
-            // statusBar?.Disconnected();
+            statusBar?.Disconnected(socket.DisconnectReason);
 
             this.BeginInvoke((Action)(() => {
                 textIpAddress.Enabled = true;

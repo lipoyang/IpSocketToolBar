@@ -64,8 +64,7 @@ namespace IpSocketToolBar
         public bool Open(string address, int port)
         {
             // IPアドレスの解釈
-            IPAddress ipAddress;
-            if(!IPAddress.TryParse(address, out ipAddress))
+            if(!IPAddress.TryParse(address, out IPAddress ipAddress))
             {
                 try{
                     // ホスト名から(IPv4の)IPアドレスを取得
@@ -199,17 +198,25 @@ namespace IpSocketToolBar
                     }catch{
                         if (!threadQuit){
                             if(networkStream == null){
+                                // this.Disconnect()の場合
                                 Console.WriteLine(tag + "自分側からの切断");
-                            }else{
-                                Console.WriteLine(tag + "受信待ちタイムアウト");
+                                DisconnectReason = DisconnectReason.ByMe;
                             }
+                            else{
+                                Console.WriteLine(tag + "受信待ちタイムアウト");
+                                DisconnectReason = DisconnectReason.Timeout;
+                            }
+                        }else{
+                            // this.Close()の場合
+                            DisconnectReason = DisconnectReason.ByMe;
                         }
-                        break; // this.Close() or this.Disconnect() or 受信タイムアウトの場合
+                        break;
                     }
                     // Readが0を返したら切断されたと判断。
                     if (size == 0)
                     {
                         Console.WriteLine(tag + "相手側からの切断");
+                        DisconnectReason = DisconnectReason.ByHim;
                         break;
                     }
                     // 受信データあり。イベント発生
@@ -218,14 +225,14 @@ namespace IpSocketToolBar
                         byte[] data = new byte[size];
                         Array.Copy(buffer, data, size);
                         receivedPackets.Enqueue(data);
-                        if (Received != null) Received(this, EventArgs.Empty); // 受信イベント発行
+                        Received?.Invoke(this, EventArgs.Empty); // 受信イベント発行
                     }
                 } // 受信待ちループ
 
                 this.Disconnect();
                 Console.WriteLine(tag + "切断完了");
 
-                if (Disconnected != null) Disconnected(this, EventArgs.Empty); // 切断イベント発行
+                Disconnected?.Invoke(this, EventArgs.Empty); // 切断イベント発行
 
             } // 接続待ちループ
 

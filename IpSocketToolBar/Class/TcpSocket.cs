@@ -13,7 +13,16 @@ namespace IpSocketToolBar
     /// </summary>
     public abstract class TcpSocket : IpSocket
     {
-        #region 公開フィールド
+        #region 公開プロパティ/フィールド
+
+        /// <summary>
+        /// 切断した原因
+        /// </summary>
+        public DisconnectReason DisconnectReason
+        {
+            get;
+            protected set;
+        } = DisconnectReason.None;
 
         /// <summary>
         /// 受信タイムアウト時間[ミリ秒]
@@ -191,5 +200,17 @@ namespace IpSocketToolBar
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// 接続が切断した要因
+    /// </summary>
+    public enum DisconnectReason
+    {
+        None,
+        ByMe,   // 自分側から切断
+        ByHim,  // 相手側から切断
+        Timeout,// タイムアウト
+        Failed  // 接続失敗
     }
 }

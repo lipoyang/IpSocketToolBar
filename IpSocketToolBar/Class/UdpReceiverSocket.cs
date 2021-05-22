@@ -57,8 +57,7 @@ namespace IpSocketToolBar
         public bool Open(string address, int port)
         {
             // IPアドレスの解釈
-            IPAddress ipAddress;
-            if (!IPAddress.TryParse(address, out ipAddress))
+            if (!IPAddress.TryParse(address, out IPAddress ipAddress))
             {
                 try{
                     // ホスト名から(IPv4の)IPアドレスを取得
@@ -87,7 +86,6 @@ namespace IpSocketToolBar
                 LocalPort = port;
                 
                 client = new UdpClient(localEP);
-
 
                 // 受信パケットのキューをクリア
                 receivedPackets.Clear();
@@ -252,7 +250,7 @@ namespace IpSocketToolBar
                     receivedPackets.Enqueue(data);
 
                     // 受信イベント発生
-                    if (Received != null) Received(this, EventArgs.Empty);
+                    Received?.Invoke(this, EventArgs.Empty);
                 }
                 catch
                 {

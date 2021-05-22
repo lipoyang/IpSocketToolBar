@@ -46,7 +46,7 @@ namespace IpSocketToolBar
         IpSocketStatus status = IpSocketStatus.Closed;
 
         // ロック用
-        object lockObj = new object();
+        readonly object lockObj = new object();
 
         #endregion
 
@@ -135,6 +135,9 @@ namespace IpSocketToolBar
                     case DisconnectReason.Timeout:
                         text = "タイムアウトで切断しました";
                         break;
+                    case DisconnectReason.Failed:
+                        text = "接続に失敗しました";
+                        break;
                 }
                 setText("切断", text);
 
@@ -148,21 +151,6 @@ namespace IpSocketToolBar
 
                 // サーバは切断しても閉じない。クライアントは切断したら閉じる
                 status = isServer ? IpSocketStatus.Opened : IpSocketStatus.Closed;
-            }
-        }
-
-        /// <summary>
-        /// サーバへの接続が失敗したとき
-        /// </summary>
-        internal void ConnectFailed()
-        {
-            lock (lockObj)
-            {
-                setText("接続失敗");
-                waitDo(() => {
-                    if (status == IpSocketStatus.Closed) setText("停止中");
-                });
-                status = IpSocketStatus.Closed;
             }
         }
         #endregion
@@ -241,6 +229,7 @@ namespace IpSocketToolBar
         // コンポーネントの初期化
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textMainStatus = new ToolStripLabel();
             this.textSubStatus = new ToolStripLabel();
             this.timer = new Timer(this.components); // リソース管理のための引数
@@ -263,16 +252,5 @@ namespace IpSocketToolBar
         }
 
         #endregion
-
-    }
-
-    /// <summary>
-    /// 接続が切断した要因
-    /// </summary>
-    internal enum DisconnectReason
-    {
-        ByMe,   // 自分側から切断
-        ByHim,  // 相手側から切断
-        Timeout // タイムアウト
     }
 }
