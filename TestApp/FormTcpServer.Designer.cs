@@ -106,7 +106,7 @@ namespace TestApp
             // statusToolStrip
             // 
             this.statusToolStrip.Location = new System.Drawing.Point(0, 25);
-            this.statusToolStrip.MoreInformed = false;
+            this.statusToolStrip.MoreInformed = true;
             this.statusToolStrip.Name = "statusToolStrip";
             this.statusToolStrip.Size = new System.Drawing.Size(604, 25);
             this.statusToolStrip.TabIndex = 8;

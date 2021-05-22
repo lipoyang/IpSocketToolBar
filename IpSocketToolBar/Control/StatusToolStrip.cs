@@ -19,15 +19,25 @@ namespace IpSocketToolBar
         /// <summary>
         /// 詳細情報を表示するか？
         /// </summary>
+        [Browsable(true)]
+        [Category("拡張機能")]
         public bool MoreInformed
         {
             get => moreInformed;
             set{
-                moreInformed = value;
-                // TODO
+                if(moreInformed != value) {
+                    moreInformed = value;
+                    if (moreInformed) {
+                        this.Items.Add(separator);
+                        this.Items.Add(textSubStatus);
+                    } else {
+                        this.Items.Remove(separator);
+                        this.Items.Remove(textSubStatus);
+                    }
+                }
             }
         }
-        bool moreInformed = false;
+        bool moreInformed = true;
 
         #endregion
 
@@ -193,15 +203,17 @@ namespace IpSocketToolBar
         ToolStripLabel textMainStatus;
         // ステータス表示(詳細)
         ToolStripLabel textSubStatus;
+        // セパレータ(縦棒)
+        ToolStripSeparator separator;
 
         // コンポーネントの初期化
         private void InitializeComponent()
         {
             this.textMainStatus = new ToolStripLabel();
             this.textSubStatus = new ToolStripLabel();
-            this.SuspendLayout();
+            this.separator = new ToolStripSeparator();
 
-            var separator = new ToolStripSeparator();
+            this.SuspendLayout();
 
             this.textMainStatus.ToolTipText = "ステータスの概要を表示します";
             this.textMainStatus.Text = "停止中";
