@@ -178,7 +178,7 @@ namespace IpSocketToolBar
 
                 // データを受信する
                 receivedPackets.Clear();
-                byte[] data = new byte[1500];
+                byte[] buffer = new byte[1500];
                 int size;
                 while (true) // 受信待ちループ
                 {
@@ -188,7 +188,7 @@ namespace IpSocketToolBar
                     //    何もパケットが来なければタイムアウトまで待つ
                     //    this.Close()すれば例外発生して抜ける
                     try{
-                        size = networkStream.Read(data, 0, data.Length);
+                        size = networkStream.Read(buffer, 0, buffer.Length);
                     }catch{
                         if (!threadQuit) Console.WriteLine(tag + "受信待ちタイムアウト");
                         break; // this.Close() or 受信タイムアウトの場合
@@ -202,6 +202,8 @@ namespace IpSocketToolBar
                     // 受信データあり。イベント発生
                     else
                     {
+                        byte[] data = new byte[size];
+                        Array.Copy(buffer, data, size);
                         receivedPackets.Enqueue(data);
                         if (Received != null) Received(this, EventArgs.Empty); // 受信イベント発行
                     }

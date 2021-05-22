@@ -164,7 +164,6 @@ namespace IpSocketToolBar
             if(data != null)
             {
                 string str = Encoding.ASCII.GetString(data);
-                str = str.Remove(str.IndexOf("\0"));
                 return str;
             }
             else
