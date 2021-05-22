@@ -79,14 +79,15 @@ namespace IpSocketToolBar
         /// <summary>
         /// ステータスバー
         /// </summary>
+        [Browsable(true)]
+        [Category("拡張機能")]
         public StatusToolStrip StatusBar
         {
             get => statusBar;
             set
             {
                 statusBar = value;
-                statusBar.isServer = false;
-                statusBar.Closed();
+                if(statusBar != null) statusBar.isServer = false;
             }
         }
         StatusToolStrip statusBar = null;

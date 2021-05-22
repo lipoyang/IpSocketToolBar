@@ -36,18 +36,19 @@ namespace TestApp
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonSend = new System.Windows.Forms.Button();
             this.tcpServerToolStrip = new IpSocketToolBar.TcpServerToolStrip();
+            this.statusToolStrip = new IpSocketToolBar.StatusToolStrip();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 60);
+            this.textBox1.Location = new System.Drawing.Point(12, 79);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(580, 19);
             this.textBox1.TabIndex = 1;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(13, 142);
+            this.textBox2.Location = new System.Drawing.Point(13, 161);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
@@ -58,7 +59,7 @@ namespace TestApp
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 45);
+            this.label1.Location = new System.Drawing.Point(12, 64);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(218, 12);
             this.label1.TabIndex = 3;
@@ -67,7 +68,7 @@ namespace TestApp
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 127);
+            this.label2.Location = new System.Drawing.Point(12, 146);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(168, 12);
             this.label2.TabIndex = 4;
@@ -75,7 +76,7 @@ namespace TestApp
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(12, 258);
+            this.buttonClear.Location = new System.Drawing.Point(12, 277);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 5;
@@ -85,7 +86,7 @@ namespace TestApp
             // 
             // buttonSend
             // 
-            this.buttonSend.Location = new System.Drawing.Point(12, 85);
+            this.buttonSend.Location = new System.Drawing.Point(12, 104);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(75, 23);
             this.buttonSend.TabIndex = 6;
@@ -98,14 +99,25 @@ namespace TestApp
             this.tcpServerToolStrip.Location = new System.Drawing.Point(0, 0);
             this.tcpServerToolStrip.Name = "tcpServerToolStrip";
             this.tcpServerToolStrip.Size = new System.Drawing.Size(604, 25);
+            this.tcpServerToolStrip.StatusBar = this.statusToolStrip;
             this.tcpServerToolStrip.TabIndex = 7;
             this.tcpServerToolStrip.Text = "tcpServerToolStrip1";
+            // 
+            // statusToolStrip
+            // 
+            this.statusToolStrip.Location = new System.Drawing.Point(0, 25);
+            this.statusToolStrip.MoreInformed = false;
+            this.statusToolStrip.Name = "statusToolStrip";
+            this.statusToolStrip.Size = new System.Drawing.Size(604, 25);
+            this.statusToolStrip.TabIndex = 8;
+            this.statusToolStrip.Text = "statusToolStrip1";
             // 
             // FormTcpServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(604, 290);
+            this.ClientSize = new System.Drawing.Size(604, 311);
+            this.Controls.Add(this.statusToolStrip);
             this.Controls.Add(this.tcpServerToolStrip);
             this.Controls.Add(this.buttonSend);
             this.Controls.Add(this.buttonClear);
@@ -114,7 +126,7 @@ namespace TestApp
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Name = "FormTcpServer";
-            this.Text = "テスト2";
+            this.Text = "TCPサーバ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Load += new System.EventHandler(this.Form_Load);
             this.ResumeLayout(false);
@@ -131,5 +143,6 @@ namespace TestApp
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button buttonSend;
         private IpSocketToolBar.TcpServerToolStrip tcpServerToolStrip;
+        private IpSocketToolBar.StatusToolStrip statusToolStrip;
     }
 }

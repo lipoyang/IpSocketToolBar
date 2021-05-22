@@ -79,7 +79,7 @@ namespace TestApp
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Name = "FormUdpSender";
-            this.Text = "テスト2";
+            this.Text = "UDP送信器";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Load += new System.EventHandler(this.Form_Load);
             this.ResumeLayout(false);

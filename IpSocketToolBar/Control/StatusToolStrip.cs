@@ -48,6 +48,10 @@ namespace IpSocketToolBar
         // ロック用
         readonly object lockObj = new object();
 
+        // 表示更新用タイマ
+        // ※ System.Windows.Forms.Timer だとUIスレッド以外では使えない
+        readonly System.Timers.Timer timer = new System.Timers.Timer();
+
         #endregion
 
         #region 公開メソッド
@@ -71,8 +75,11 @@ namespace IpSocketToolBar
         {
             lock (lockObj)
             {
-                setText(isServer ? "接続待ち" : "接続試行");
-                status = IpSocketStatus.Opened;
+                if(status == IpSocketStatus.Closed)
+                {
+                    setText(isServer ? "接続待ち" : "接続試行");
+                    status = IpSocketStatus.Opened;
+                }
             }
         }
 
@@ -160,18 +167,20 @@ namespace IpSocketToolBar
         // ステータスの表示
         private void setText(string mainStatus, string subStatus ="")
         {
-            this.Invoke((Action)(() => {
+            this.BeginInvoke((Action)(() => {
                 textMainStatus.Text = mainStatus;
                 textSubStatus.Text = subStatus;
             }));
         }
 
+        System.Timers.Timer timer2;
+
         // 一定時間後に実行(表示更新用)
         private void waitDo(Action action)
         {
             timer.Stop();
-            timer.Interval = 2000; // 2秒後に実行
-            timer.Tick += (sender, e) => {
+            timer.Interval = 3000; // 3秒後に実行
+            timer.Elapsed += (sender, e) => {
                 lock (lockObj)
                 {
                     timer.Stop();
@@ -210,35 +219,18 @@ namespace IpSocketToolBar
         ToolStripLabel textMainStatus;
         // ステータス表示(詳細)
         ToolStripLabel textSubStatus;
-        // 表示更新用タイマ
-        Timer timer;
-
-        // リソース管理用
-        IContainer components = null;
-
-        // 使用中のリソースをすべてクリーンアップします
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
         // コンポーネントの初期化
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.textMainStatus = new ToolStripLabel();
             this.textSubStatus = new ToolStripLabel();
-            this.timer = new Timer(this.components); // リソース管理のための引数
             this.SuspendLayout();
 
             var separator = new ToolStripSeparator();
 
             this.textMainStatus.ToolTipText = "ステータスの概要を表示します";
-            this.textMainStatus.Text = "";
+            this.textMainStatus.Text = "停止中";
 
             this.textSubStatus.ToolTipText = "ステータスの詳細を表示します";
             this.textSubStatus.Text = "";
