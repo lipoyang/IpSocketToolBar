@@ -35,8 +35,6 @@ namespace IpSocketToolBar
 
         // TCPソケット
         internal TcpSocket tcpSocket = null;
-        // サーバか？
-        internal bool isServer = false;
 
         // ロック用
         readonly object lockObj = new object();
@@ -44,6 +42,9 @@ namespace IpSocketToolBar
         // 表示更新用タイマ
         // ※ System.Windows.Forms.Timer だとUIスレッド以外では使えない
         readonly System.Timers.Timer timer = new System.Timers.Timer();
+
+        // 切断直後か？ (切断原因の表示用)
+        bool disconnetedNow = false;
 
         #endregion
 
@@ -61,49 +62,26 @@ namespace IpSocketToolBar
         #endregion
 
         #region 内部メソッド (internal)
+
         /// <summary>
-        /// ソケットを開いたとき
+        /// ステータス表示の更新
         /// </summary>
-        internal void Opened()
+        internal void UpdateStatus()
         {
             lock (lockObj)
             {
-                updataStatusBar();
+                // 切断メッセージ表示中は「停止中」への表示更新を保留
+                if (!tcpSocket.IsOpen && disconnetedNow) return;
+
+                updateStatusText();
             }
         }
 
         /// <summary>
-        /// ソケットを閉じたとき
-        /// </summary>
-        internal void Closed()
-        {
-            lock (lockObj)
-            {
-                if (disconnetedNow) return; // 切断メッセージ表示中はスキップ
-                updataStatusBar();
-            }
-        }
-
-        /// <summary>
-        /// ソケットが接続したとき
-        /// </summary>
-        /// <param name="address">IPアドレス</param>
-        /// <param name="port">ポート番号</param>
-        internal void Connected(string address, int port)
-        {
-            lock (lockObj)
-            {
-                updataStatusBar();
-            }
-        }
-
-        bool disconnetedNow = false;
-
-        /// <summary>
-        /// ソケットが切断したとき
+        /// ステータス表示の更新
         /// </summary>
         /// <param name="reason">切断理由</param>
-        internal void Disconnected(DisconnectReason reason)
+        internal void UpdateStatus(DisconnectReason reason)
         {
             lock (lockObj)
             {
@@ -128,7 +106,7 @@ namespace IpSocketToolBar
 
                 waitDo(() => {
                     disconnetedNow = false;
-                    updataStatusBar();
+                    updateStatusText();
                 });
             }
         }
@@ -136,11 +114,13 @@ namespace IpSocketToolBar
 
         #region 内部メソッド (private)
 
-        // ステータス表示更新
-        private void updataStatusBar()
+        // ステータス表示の文字列を更新
+        private void updateStatusText()
         {
             if (tcpSocket.IsOpen)
             {
+                bool isServer = (tcpSocket is TcpServerSocket);
+
                 if (tcpSocket.IsConnected)
                 {
                     string text = isServer ? "相手のアドレス " : "自分のアドレス ";

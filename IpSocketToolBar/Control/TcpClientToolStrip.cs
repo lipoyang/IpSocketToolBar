@@ -87,7 +87,6 @@ namespace IpSocketToolBar
             set
             {
                 statusBar = value;
-                if (statusBar != null) statusBar.isServer = false;
                 if (statusBar != null) statusBar.tcpSocket = socket;
             }
         }
@@ -233,7 +232,7 @@ namespace IpSocketToolBar
             textPort.Enabled = false;
             buttonOpen.Enabled = false;
             buttonClose.Enabled = true;
-            statusBar?.Opened();
+            statusBar?.UpdateStatus();
 
             // イベント発行
             Opened?.Invoke(this, EventArgs.Empty);
@@ -251,7 +250,7 @@ namespace IpSocketToolBar
             textPort.Enabled = true;
             buttonOpen.Enabled = true;
             buttonClose.Enabled = false;
-            statusBar?.Closed();
+            statusBar?.UpdateStatus();
 
             // イベント発行
             Closed?.Invoke(this, EventArgs.Empty);
@@ -260,13 +259,13 @@ namespace IpSocketToolBar
         // 接続したとき
         private void socket_Connect(object sender, EventArgs e)
         {
-            statusBar?.Connected(socket.LocalAddress, socket.LocalPort);
+            statusBar?.UpdateStatus();
         }
 
         // 接続が切断したとき
         private void socket_Disconnect(object sender, EventArgs e)
         {
-            statusBar?.Disconnected(socket.DisconnectReason);
+            statusBar?.UpdateStatus(socket.DisconnectReason);
 
             this.BeginInvoke((Action)(() => {
                 textIpAddress.Enabled = true;
