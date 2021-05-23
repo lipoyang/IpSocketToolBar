@@ -25,6 +25,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("開始したときに発生します。")]
         public event EventHandler Opened = null;
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("停止したときに発生します。")]
         public event EventHandler Closed = null;
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("接続したときに発生します。")]
         public event EventHandler Connected
         {
             add => socket.Connected += value;
@@ -50,6 +53,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("切断したときに発生します。")]
         public event EventHandler Disconnected
         {
             add => socket.Disconnected += value;
@@ -61,6 +65,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("データを受信したときに発生します。")]
         public event EventHandler Rreceived
         {
             add => socket.Received += value;
@@ -81,6 +86,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("ステータスを表示させるツールバーです。")]
         public StatusToolStrip StatusBar
         {
             get => statusBar;

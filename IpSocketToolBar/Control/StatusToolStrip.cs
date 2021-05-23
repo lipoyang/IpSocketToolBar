@@ -21,6 +21,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("詳細情報を表示するか？")]
         public bool MoreInformed
         {
             get => moreInformed;
@@ -165,10 +166,13 @@ namespace IpSocketToolBar
             timer.Stop();
             timer.Interval = 3000; // 3秒後に実行
             timer.Elapsed += (sender, e) => {
-                lock (lockObj)
+                if (!this.IsDisposed) // ウィンドウが閉じられてないか？
                 {
-                    timer.Stop();
-                    action();
+                    lock (lockObj)
+                    {
+                        timer.Stop();
+                        action();
+                    }
                 }
             };
             timer.Start();

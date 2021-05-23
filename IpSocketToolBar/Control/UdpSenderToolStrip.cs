@@ -24,6 +24,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("開始したときに発生します。")]
         public event EventHandler Opened = null;
 
         /// <summary>
@@ -31,6 +32,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
+        [Description("停止したときに発生します。")]
         public event EventHandler Closed = null;
 
         #endregion
