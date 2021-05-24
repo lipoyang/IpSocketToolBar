@@ -49,6 +49,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormTcpClient2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTcpClient2.Designer.cs">
+      <DependentUpon>FormTcpClient2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTcpServer2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTcpServer2.Designer.cs">
+      <DependentUpon>FormTcpServer2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormUdpReceiver2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUdpReceiver2.Designer.cs">
+      <DependentUpon>FormUdpReceiver2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormUdpSender2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUdpSender2.Designer.cs">
+      <DependentUpon>FormUdpSender2.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormUdpSender.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +105,18 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormTcpClient2.resx">
+      <DependentUpon>FormTcpClient2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTcpServer2.resx">
+      <DependentUpon>FormTcpServer2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormUdpReceiver2.resx">
+      <DependentUpon>FormUdpReceiver2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormUdpSender2.resx">
+      <DependentUpon>FormUdpSender2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormUdpSender.resx">
       <DependentUpon>FormUdpSender.cs</DependentUpon>
     </EmbeddedResource>

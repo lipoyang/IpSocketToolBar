@@ -19,26 +19,42 @@ namespace TestApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var form = new FormTcpServer() { Text = "TCPサーバ" };
+            var form = new FormTcpServer();
             form.Show();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var form = new FormTcpClient() { Text = "TCPクライアント" };
+            var form = new FormTcpClient();
             form.Show();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var form = new FormUdpReceiver() { Text = "UDP受信器" };
+            var form = new FormUdpReceiver();
             form.Show();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            var form = new FormUdpSender() { Text = "UDP送信器" };
+            var form = new FormUdpSender();
             form.Show();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var formA = new FormTcpClient2();
+            formA.Show();
+            var formB = new FormTcpServer2();
+            formB.Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            var formA = new FormUdpSender2();
+            formA.Show();
+            var formB = new FormUdpReceiver2();
+            formB.Show();
         }
     }
 }
