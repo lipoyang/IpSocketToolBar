@@ -12,7 +12,7 @@ using IpSocketToolBar;
 
 namespace TestApp
 {
-    // UDP受信器テスト
+    // UDP受信器のテスト
     public partial class FormUdpReceiver : Form
     {
         public FormUdpReceiver()
@@ -50,7 +50,6 @@ namespace TestApp
         // 受信スレッド関数
         private void threadRxFunc()
         {
-            // シリアルポート
             var receiver = udpReceiverToolStrip.Socket;
 
             while (!threadRxQuit)

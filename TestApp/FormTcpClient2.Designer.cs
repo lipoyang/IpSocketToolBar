@@ -53,6 +53,7 @@ namespace TestApp
             this.tcpClientToolStrip.StatusBar = this.statusToolStrip;
             this.tcpClientToolStrip.TabIndex = 7;
             this.tcpClientToolStrip.Text = "tcpClientToolStrip1";
+            this.tcpClientToolStrip.Connected += new System.EventHandler(this.tcpClientToolStrip_Connected);
             // 
             // statusToolStrip
             // 
@@ -104,6 +105,7 @@ namespace TestApp
             this.trackBar.Size = new System.Drawing.Size(400, 45);
             this.trackBar.TabIndex = 14;
             this.trackBar.TickFrequency = 10;
+            this.trackBar.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // label1
             // 

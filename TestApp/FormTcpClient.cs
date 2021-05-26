@@ -12,7 +12,7 @@ using IpSocketToolBar;
 
 namespace TestApp
 {
-    // テスト2
+    // TCPクライアントのテスト
     public partial class FormTcpClient : Form
     {
         public FormTcpClient()
@@ -51,7 +51,6 @@ namespace TestApp
         // 受信スレッド関数
         private void threadRxFunc()
         {
-            // シリアルポート
             var client = tcpClientToolStrip.Socket;
 
             while (!threadRxQuit)
@@ -74,7 +73,6 @@ namespace TestApp
         // 送信ボタン
         private void buttonSend_Click(object sender, EventArgs e)
         {
-            // シリアルポート
             var server = tcpClientToolStrip.Socket;
             if (!server.IsOpen) return;
 

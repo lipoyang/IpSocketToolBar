@@ -40,6 +40,7 @@ namespace TestApp
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
+            this.udpReceiverToolStrip = new IpSocketToolBar.UdpReceiverToolStrip();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -128,6 +129,7 @@ namespace TestApp
             this.trackBar.Size = new System.Drawing.Size(400, 45);
             this.trackBar.TabIndex = 24;
             this.trackBar.TickFrequency = 10;
+            this.trackBar.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // label1
             // 
@@ -138,11 +140,20 @@ namespace TestApp
             this.label1.TabIndex = 23;
             this.label1.Text = "トラックバーの値を送信します";
             // 
+            // udpReceiverToolStrip
+            // 
+            this.udpReceiverToolStrip.Location = new System.Drawing.Point(0, 25);
+            this.udpReceiverToolStrip.Name = "udpReceiverToolStrip";
+            this.udpReceiverToolStrip.Size = new System.Drawing.Size(464, 25);
+            this.udpReceiverToolStrip.TabIndex = 33;
+            this.udpReceiverToolStrip.Text = "udpReceiverToolStrip1";
+            // 
             // FormUdpSender2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(464, 281);
+            this.Controls.Add(this.udpReceiverToolStrip);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -176,5 +187,6 @@ namespace TestApp
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TrackBar trackBar;
         private System.Windows.Forms.Label label1;
+        private IpSocketToolBar.UdpReceiverToolStrip udpReceiverToolStrip;
     }
 }

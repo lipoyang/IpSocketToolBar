@@ -12,7 +12,7 @@ using IpSocketToolBar;
 
 namespace TestApp
 {
-    // テスト2
+    // TCPサーバのテスト2
     public partial class FormTcpServer2 : Form
     {
         public FormTcpServer2()
@@ -20,76 +20,108 @@ namespace TestApp
             InitializeComponent();
         }
 
-        // 受信スレッド
-        Thread threadRx;
-        bool threadRxQuit;
+        // ソケット
+        TcpServerSocket socket;
+
+        // 受信パケット数
+        int recvPackNum = 0;
+        // 正常応答の数
+        int sendAckNum = 0;
+        // 異常応答の数
+        int sendNakNum = 0;
 
         // 開始処理
         private void Form_Load(object sender, EventArgs e)
         {
             // フォームのLoadイベントで開始処理を呼ぶ
             tcpServerToolStrip.Begin(@"SETTING.INI", this.Text);
-            //tcpServerToolStrip.Socket.ReadTimeout = 5000;
 
-            // 受信スレッド開始
-            threadRxQuit = false;
-            threadRx = new Thread(new ThreadStart(threadRxFunc));
-            threadRx.Start();
+            // ソケット
+            socket = tcpServerToolStrip.Socket;
+
+            // パケット数カウンタ表示
+            updateCounter();
         }
 
         // 終了処理
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 受信スレッド終了
-            threadRxQuit = true;
-            threadRx.Join();
-
             // フォームのFormClosingイベントで終了処理を呼ぶ
             tcpServerToolStrip.End();
         }
 
-        // 受信スレッド関数
-        private void threadRxFunc()
+        // ソケットが接続したとき
+        private void tcpServerToolStrip_Connected(object sender, EventArgs e)
         {
-            // シリアルポート
-            var server = tcpServerToolStrip.Socket;
+            recvPackNum = 0;
+            sendAckNum = 0;
+            sendNakNum = 0;
+            updateCounter();
+        }
 
-            while (!threadRxQuit)
+        // ACK送信
+        private void sendAck()
+        {
+            // パケット作成
+            var packet = new PacketPayload(1);
+            packet.SetByte(1, AsciiCode.ACK);
+            // パケット送信
+            socket.Send(packet);
+
+            sendAckNum++;
+        }
+
+        // NAK送信
+        private void sendNak()
+        {
+            // パケット作成
+            var packet = new PacketPayload(1);
+            packet.SetByte(1, AsciiCode.NAK);
+            // パケット送信
+            socket.Send(packet);
+
+            sendNakNum++;
+        }
+
+        // パケットを受信したとき
+        private void Receiver_PacketReceived(object sender, EventArgs e)
+        {
+            while (true)
             {
-                if (server.IsOpen)
-                {
-                    // コマンドラインを受信
-                    string command = server.WaitString(100);
-                    if(command != null)
-                    {
-                        // テキストボックスに表示
-                        this.BeginInvoke((Action)(() => {
-                            textBox2.Text += command + "\r\n";
-                        }));
+                // パケットを取得
+                var packet = socket.GetPacket();
+                if (packet == null) break;
+                recvPackNum++;
+
+                // パケットを解釈
+                bool ack = false;
+                if (packet.GetHex(1, 2, out int val)){
+                    if (val <= 100) {
+                        ack = true;
                     }
                 }
+                // ACK応答 or NAK応答
+                if (ack){
+                    sendAck();
+                }else{
+                    sendNak();
+                }
+                // 表示更新
+                this.BeginInvoke((Action)(() => {
+                    if (ack) {
+                        progressBar.SetValue(val);
+                    }
+                    updateCounter();
+                }));
             }
         }
 
-        // 送信ボタン
-        private void buttonSend_Click(object sender, EventArgs e)
+        // パケット数表示更新
+        private void updateCounter()
         {
-            // シリアルポート
-            var server = tcpServerToolStrip.Socket;
-            if (!server.IsOpen) return;
-
-            // コマンドラインを送信
-            if(textBox1.Text.Length > 0)
-            {
-                string command = textBox1.Text;
-                server.Send(command);
-            }
-        }
-
-        // クリアボタン
-        private void buttonClear_Click(object sender, EventArgs e)
-        {
-            textBox2.Text = "";
+            textBox1.Text = recvPackNum.ToString();
+            textBox2.Text = sendAckNum.ToString();
+            textBox3.Text = sendNakNum.ToString();
         }
     }
 }

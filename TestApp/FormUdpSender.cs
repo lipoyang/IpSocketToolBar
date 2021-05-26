@@ -12,7 +12,7 @@ using IpSocketToolBar;
 
 namespace TestApp
 {
-    // テスト2
+    // UDP送信器のテスト
     public partial class FormUdpSender : Form
     {
         public FormUdpSender()
@@ -38,7 +38,6 @@ namespace TestApp
         // 送信ボタン
         private void buttonSend_Click(object sender, EventArgs e)
         {
-            // シリアルポート
             var server = udpSenderToolStrip.Socket;
             if (!server.IsOpen) return;
 

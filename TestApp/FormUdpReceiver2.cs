@@ -12,7 +12,7 @@ using IpSocketToolBar;
 
 namespace TestApp
 {
-    // UDP受信器テスト
+    // UDP受信器のテスト2
     public partial class FormUdpReceiver2 : Form
     {
         public FormUdpReceiver2()
@@ -20,9 +20,16 @@ namespace TestApp
             InitializeComponent();
         }
 
-        // 受信スレッド
-        Thread threadRx;
-        bool threadRxQuit;
+        // ソケット
+        UdpSenderSocket socketS;
+        UdpReceiverSocket socketR;
+
+        // 受信パケット数
+        int recvPackNum = 0;
+        // 正常応答の数
+        int sendAckNum = 0;
+        // 異常応答の数
+        int sendNakNum = 0;
 
         // 開始処理
         private void Form_Load(object sender, EventArgs e)
@@ -30,50 +37,99 @@ namespace TestApp
             // フォームのLoadイベントで開始処理を呼ぶ
             udpReceiverToolStrip.Begin(@"SETTING.INI", this.Text);
 
-            // 受信スレッド開始
-            threadRxQuit = false;
-            threadRx = new Thread(new ThreadStart(threadRxFunc));
-            threadRx.Start();
+            // ソケット
+            socketR = udpReceiverToolStrip.Socket;
+            socketS = new UdpSenderSocket();
+
+            // パケット数カウンタ表示
+            updateCounter();
         }
 
         // 終了処理
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 受信スレッド終了
-            threadRxQuit = true;
-            threadRx.Join();
-
             // フォームのFormClosingイベントで終了処理を呼ぶ
             udpReceiverToolStrip.End();
+
+            if (socketS.IsOpen) socketS.Close();
         }
 
-        // 受信スレッド関数
-        private void threadRxFunc()
+        // シリアルポートが開いたとき
+        private void serialPortToolStrip_Opened(object sender, EventArgs e)
         {
-            // シリアルポート
-            var receiver = udpReceiverToolStrip.Socket;
+            recvPackNum = 0;
+            sendAckNum = 0;
+            sendNakNum = 0;
+            updateCounter();
+        }
 
-            while (!threadRxQuit)
+        // ACK送信
+        private void sendAck()
+        {
+            // パケット作成
+            var packet = new PacketPayload(3);
+            packet.SetByte(1, AsciiCode.ACK);
+            // パケット送信
+            socketS.Send(packet);
+
+            sendAckNum++;
+        }
+
+        // NAK送信
+        private void sendNak()
+        {
+            // パケット作成
+            var packet = new PacketPayload(3);
+            packet.SetByte(1, AsciiCode.NAK);
+            // パケット送信
+            socketS.Send(packet);
+
+            sendNakNum++;
+        }
+
+        // パケットを受信したとき
+        private void Receiver_PacketReceived(object sender, EventArgs e)
+        {
+            while (true)
             {
-                if (receiver.IsOpen)
-                {
-                    // コマンドラインを受信
-                    string command = receiver.WaitString(100);
-                    if(command != null)
-                    {
-                        // テキストボックスに表示
-                        this.BeginInvoke((Action)(() => {
-                            textBox2.Text += command + "\r\n";
-                        }));
+                // パケットを取得
+                var packet = socketR.GetPacket();
+                if (packet == null) break;
+                recvPackNum++;
+
+                // 送信元に返信する設定
+                if (socketS.IsOpen) socketS.Close();
+                socketS.Open(socketR.RemoteAddress, socketR.RemotePort);
+
+                // パケットを解釈
+                bool ack = false;
+                if (packet.GetHex(1, 2, out int val)){
+                    if (val <= 100){
+                        ack = true;
                     }
                 }
+                // ACK応答 or NAK応答
+                if (ack){
+                    sendAck();
+                }else{
+                    sendNak();
+                }
+                // 表示更新
+                this.BeginInvoke((Action)(() => {
+                    if (ack){
+                        progressBar.SetValue(val);
+                    }
+                    updateCounter();
+                }));
             }
         }
 
-        // クリアボタン
-        private void buttonClear_Click(object sender, EventArgs e)
+        // パケット数表示更新
+        private void updateCounter()
         {
-            textBox2.Text = "";
+            textBox1.Text = recvPackNum.ToString();
+            textBox2.Text = sendAckNum.ToString();
+            textBox3.Text = sendNakNum.ToString();
         }
     }
 }
