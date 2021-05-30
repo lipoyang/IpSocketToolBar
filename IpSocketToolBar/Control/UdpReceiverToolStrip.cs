@@ -60,7 +60,7 @@ namespace IpSocketToolBar
         /// 開始/停止ボタンを表示するか？
         /// (UdpSenderToolStripと連動させる場合は非表示にする)
         /// </summary>
-        public bool ButtonVisible
+        internal bool ButtonVisible
         {
             get => buttonVisible;
             set
@@ -96,7 +96,7 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="iniFileName">設定INIファイルのパス</param>
         /// <param name="section">設定INIファイルのセクション名</param>
-        /// <param name="section">既定のポート番号</param>
+        /// <param name="port">既定のポート番号</param>
         public void Begin(string iniFileName = @".\SETTING.INI", string section = "UDP_RECEIVER", int port = 1234)
         {
             // IPアドレスとポート番号の既定値を設定ファイルから読み出し

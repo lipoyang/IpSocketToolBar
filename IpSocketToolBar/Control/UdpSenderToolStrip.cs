@@ -50,17 +50,17 @@ namespace IpSocketToolBar
         [Browsable(true)]
         [Category("拡張機能")]
         [Description("ペアになるUDP受信のツールバー")]
-        public UdpReceiverToolStrip UdpReceiverToolStrip {
-            get => udpReceiverToolStrip;
+        public UdpReceiverToolStrip UdpReceiverBar {
+            get => udpReceiverBar;
             set
             {
-                udpReceiverToolStrip = value;
+                udpReceiverBar = value;
 
                 // 受信ツールバーの開始/停止ボタンを非表示にする
-                udpReceiverToolStrip.ButtonVisible = false;
+                udpReceiverBar.ButtonVisible = false;
             }
         }
-        private UdpReceiverToolStrip udpReceiverToolStrip = null;
+        private UdpReceiverToolStrip udpReceiverBar = null;
 
         #endregion
 
@@ -86,7 +86,7 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="iniFileName">設定INIファイルのパス</param>
         /// <param name="section">設定INIファイルのセクション名</param>
-        /// <param name="section">既定のポート番号</param>
+        /// <param name="port">既定のポート番号</param>
         public void Begin(string iniFileName = @".\SETTING.INI", string section = "UDP_SENDER", int port = 1234)
         {
             // IPアドレスとポート番号の既定値を設定ファイルから読み出し
@@ -160,10 +160,10 @@ namespace IpSocketToolBar
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             // ペアになるUDP受信のツールバーがある場合
-            if(udpReceiverToolStrip != null)
+            if(udpReceiverBar != null)
             {
-                if(!udpReceiverToolStrip.Open()) return;
-                this.Socket.FixedLocalPort = udpReceiverToolStrip.Socket.LocalPort;
+                if(!udpReceiverBar.Open()) return;
+                this.Socket.FixedLocalPort = udpReceiverBar.Socket.LocalPort;
             }
 
             // IPアドレス/ホスト名のチェック
@@ -217,9 +217,9 @@ namespace IpSocketToolBar
         private void buttonClose_Click(object sender, EventArgs e)
         {
             // ペアになるUDP受信のツールバーがある場合
-            if (udpReceiverToolStrip != null)
+            if (udpReceiverBar != null)
             {
-                udpReceiverToolStrip.Close();
+                udpReceiverBar.Close();
             }
 
             // ポートを閉じる
