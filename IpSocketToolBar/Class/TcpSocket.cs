@@ -98,6 +98,7 @@ namespace IpSocketToolBar
         /// <returns>バイト列データ</returns>
         public byte[] GetBytes()
         {
+            if (receivedPackets.Count == 0) return null;
             byte[] data = receivedPackets.Dequeue();
             return data;
         }
@@ -107,6 +108,7 @@ namespace IpSocketToolBar
         /// <returns>文字列データ</returns>
         public string GetString()
         {
+            if (receivedPackets.Count == 0) return null;
             byte[] data = receivedPackets.Dequeue();
             if (data != null)
             {
@@ -124,6 +126,7 @@ namespace IpSocketToolBar
         /// <returns>パケットのペイロード</returns>
         public PacketPayload GetPacket()
         {
+            if (receivedPackets.Count == 0) return null;
             byte[] data = receivedPackets.Dequeue();
             if (data != null)
             {

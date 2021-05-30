@@ -66,7 +66,7 @@ namespace IpSocketToolBar
         [Browsable(true)]
         [Category("拡張機能")]
         [Description("データを受信したときに発生します。")]
-        public event EventHandler Rreceived
+        public event EventHandler Received
         {
             add => socket.Received += value;
             remove => socket.Received -= value;

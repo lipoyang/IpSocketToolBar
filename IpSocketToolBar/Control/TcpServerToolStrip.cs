@@ -65,7 +65,7 @@ namespace IpSocketToolBar
         /// </summary>
         [Browsable(true)]
         [Category("拡張機能")]
-        public event EventHandler Rreceived
+        public event EventHandler Received
         {
             add => socket.Received += value;
             remove => socket.Received -= value;

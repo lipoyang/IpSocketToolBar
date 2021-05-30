@@ -51,6 +51,7 @@ namespace TestApp
             this.tcpServerToolStrip.TabIndex = 7;
             this.tcpServerToolStrip.Text = "tcpServerToolStrip1";
             this.tcpServerToolStrip.Connected += new System.EventHandler(this.tcpServerToolStrip_Connected);
+            this.tcpServerToolStrip.Received += new System.EventHandler(this.tcpServerToolStrip_Received);
             // 
             // statusToolStrip
             // 

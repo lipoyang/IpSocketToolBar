@@ -223,6 +223,7 @@ namespace IpSocketToolBar
                     // 受信データあり。イベント発生
                     else
                     {
+                        // Console.WriteLine(tag + "データ受信");
                         byte[] data = new byte[size];
                         Array.Copy(buffer, data, size);
                         receivedPackets.Enqueue(data);

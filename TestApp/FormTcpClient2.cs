@@ -121,7 +121,8 @@ namespace TestApp
         private void sendPacketWaitResponse(int val)
         {
             // パケット作成
-            var packet = new PacketPayload(4);
+            var packet = new PacketPayload(3);
+            packet.SetChar(0, 'D');
             packet.SetHex(1, 2, val);
 
             // パケット送信
@@ -138,7 +139,7 @@ namespace TestApp
             // 応答はあったか？
             if (resPacket != null){
                 // ACK応答か？
-                if (resPacket.Data[1] == AsciiCode.ACK){
+                if (resPacket.Data[0] == AsciiCode.ACK){
                     recvAckNum++;
                 }else{
                     recvNakNum++;

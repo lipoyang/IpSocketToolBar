@@ -67,8 +67,8 @@ namespace TestApp
         private void sendAck()
         {
             // パケット作成
-            var packet = new PacketPayload(3);
-            packet.SetByte(1, AsciiCode.ACK);
+            var packet = new PacketPayload(1);
+            packet.SetByte(0, AsciiCode.ACK);
             // パケット送信
             socketS.Send(packet);
 
@@ -79,8 +79,8 @@ namespace TestApp
         private void sendNak()
         {
             // パケット作成
-            var packet = new PacketPayload(3);
-            packet.SetByte(1, AsciiCode.NAK);
+            var packet = new PacketPayload(1);
+            packet.SetByte(0, AsciiCode.NAK);
             // パケット送信
             socketS.Send(packet);
 
@@ -88,7 +88,7 @@ namespace TestApp
         }
 
         // パケットを受信したとき
-        private void Receiver_PacketReceived(object sender, EventArgs e)
+        private void udpReceiverToolStrip_Received(object sender, EventArgs e)
         {
             while (true)
             {
@@ -102,10 +102,13 @@ namespace TestApp
                 socketS.Open(socketR.RemoteAddress, socketR.RemotePort);
 
                 // パケットを解釈
+                int val = 0;
                 bool ack = false;
-                if (packet.GetHex(1, 2, out int val)){
-                    if (val <= 100){
-                        ack = true;
+                if (packet.GetChar(0) == 'D') {
+                    if (packet.GetHex(1, 2, out val)) {
+                        if (val <= 100) {
+                            ack = true;
+                        }
                     }
                 }
                 // ACK応答 or NAK応答

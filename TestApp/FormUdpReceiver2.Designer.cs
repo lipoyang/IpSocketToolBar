@@ -29,7 +29,6 @@ namespace TestApp
         /// </summary>
         private void InitializeComponent()
         {
-            this.udpReceiverToolStrip = new IpSocketToolBar.UdpReceiverToolStrip();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -38,16 +37,8 @@ namespace TestApp
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
+            this.udpReceiverToolStrip = new IpSocketToolBar.UdpReceiverToolStrip();
             this.SuspendLayout();
-            // 
-            // udpReceiverToolStrip
-            // 
-            this.udpReceiverToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.udpReceiverToolStrip.Location = new System.Drawing.Point(0, 0);
-            this.udpReceiverToolStrip.Name = "udpReceiverToolStrip";
-            this.udpReceiverToolStrip.Size = new System.Drawing.Size(464, 25);
-            this.udpReceiverToolStrip.TabIndex = 7;
-            this.udpReceiverToolStrip.Text = "udpReceiverToolStrip1";
             // 
             // textBox3
             // 
@@ -115,6 +106,16 @@ namespace TestApp
             this.label2.Size = new System.Drawing.Size(220, 12);
             this.label2.TabIndex = 28;
             this.label2.Text = "ここに受信した値をプログレスバーで表示します";
+            // 
+            // udpReceiverToolStrip
+            // 
+            this.udpReceiverToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.udpReceiverToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.udpReceiverToolStrip.Name = "udpReceiverToolStrip";
+            this.udpReceiverToolStrip.Size = new System.Drawing.Size(464, 25);
+            this.udpReceiverToolStrip.TabIndex = 7;
+            this.udpReceiverToolStrip.Text = "udpReceiverToolStrip1";
+            this.udpReceiverToolStrip.Received += new System.EventHandler(this.udpReceiverToolStrip_Received);
             // 
             // FormUdpReceiver2
             // 
