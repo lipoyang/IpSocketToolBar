@@ -1,39 +1,50 @@
-# BinaryPacket
-バイナリー形式パケットを表します。  
-バイナリー形式パケットとは、開始ヘッダとパケット長指定子を持つバイナリーデータのパケットです。
+# PacketPayload
+パケットのペイロードを表します。  
 
 ## コンストラクタ
 |  名前  |  説明  |
 | ---- | ---- |
-| BinaryPacket(data, endian) | data: パケットのバイト配列データ<br>endian: エンディアン指定(省略可) |
-| BinaryPacket(size, header, endian) | size: パケットの全バイト数(ヘッダ等を含む)<br>header:  ヘッダ<br>endian: エンディアン指定(省略可)|
+| PacketPayload(data, endian) | data: ペイロードのバイト配列データ<br>endian: エンディアン指定(省略可) |
+| PacketPayload(size, endian) | size: ペイロードの全バイト数<br>endian: エンディアン指定(省略可)|
+| PacketPayload(stringData) | stringData: 文字列データ|
 
 ## フィールド
 |  名前  |  説明  |
 | ---- | ---- |
-| Data |  パケットのバイト配列データ |
+| Data |  ペイロードのバイト配列データ |
 
 ## メソッド
 
-### Set系
+### バイト/文字/文字列データの格納と取得
 |  名前  |  説明  |
 | ---- | ---- |
 | SetByte(offset, value)  |  1バイトのデータ(制御コードなど)を格納します。 |
 | SetChar(offset, value)  |  1文字のアスキー文字を格納します。 |
 | SetString(offset, stringData)  |  文字列を格納します。 |
-| SetInt(offset, width, value)  |  整数値を格納します。 |
-| SetFloat(offset, value)  |  float型実数値を格納します。 |
-
-### Get系
-|  名前  |  説明  |
-| ---- | ---- |
 | GetByte(offset)  |  1バイトのデータ(制御コードなど)を取得します。 |
 | GetChar(offset)  |  1文字のアスキー文字を取得します。 |
 | GetString(offset, length)  |  文字列を取得します。 |
+| ToString()  |  パケットデータを文字列に変換します。 |
+
+### 整数/実数データの格納と取得 (バイナリー形式)
+|  名前  |  説明  |
+| ---- | ---- |
+| SetInt(offset, width, value)  |  整数値を格納します。 |
+| SetFloat(offset, value)  |  float型実数値を格納します。 |
 | GetInt(offset, width)  |  非負整数値を取得します。 |
 | GetIntU(offset, width)  |  符号なし整数値を取得します。 |
 | GetIntS(offset, width)  |  符号つき整数値を取得します。 |
 | GetFloat(offset)  |   float型実数値を取得します。 |
+
+### 整数/実数データの格納と取得 (アスキー形式)
+|  名前  |  説明  |
+| ---- | ---- |
+| SetHex(offset, width, value)  |  整数値を16進文字列に変換して格納します。 |
+| SetDec(offset, width, value)  |  非負整数値を10進文字列に変換して格納します。 |
+| GetHex(offset, width, out int value)  |  16進文字列を非負整数値に変換して取得します。 |
+| GetDec(offset, width, out int value)  |  10進文字列を非負整数値に変換して取得します。 |
+| GetHexU(offset, width, out uint value)  |  16進文字列を符号なし整数値に変換して取得します。 |
+| GetHexS(offset, width, out int value)  |  16進文字列を符号つき整数値に変換して取得します。 |
 
 ### チェックサム系
 |  名前  |  説明  |
