@@ -56,6 +56,22 @@ namespace IpSocketToolBar
         /// </summary>
         public UdpReceiverSocket Socket { get => socket; }
 
+        /// <summary>
+        /// 開始/停止ボタンを表示するか？
+        /// (UdpSenderToolStripと連動させる場合は非表示にする)
+        /// </summary>
+        public bool ButtonVisible
+        {
+            get => buttonVisible;
+            set
+            {
+                buttonVisible = value;
+                this.buttonClose.Visible = value;
+                this.buttonOpen.Visible = value;
+            }
+        }
+        private bool buttonVisible = true;
+
         #endregion
 
         #region 公開メソッド
@@ -119,7 +135,7 @@ namespace IpSocketToolBar
         public bool Open()
         {
             this.Invoke((Action)(() => {
-                buttonOpen.PerformClick();
+                this.buttonOpen_Click(this, EventArgs.Empty);
             }));
             return socket.IsOpen;
         }
@@ -130,7 +146,7 @@ namespace IpSocketToolBar
         public void Close()
         {
             this.Invoke((Action)(() => {
-                buttonClose.PerformClick();
+                this.buttonClose_Click(this, EventArgs.Empty);
             }));
         }
 

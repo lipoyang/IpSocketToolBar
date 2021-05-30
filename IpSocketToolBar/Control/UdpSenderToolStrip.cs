@@ -52,7 +52,13 @@ namespace IpSocketToolBar
         [Description("ペアになるUDP受信のツールバー")]
         public UdpReceiverToolStrip UdpReceiverToolStrip {
             get => udpReceiverToolStrip;
-            set => udpReceiverToolStrip = value;
+            set
+            {
+                udpReceiverToolStrip = value;
+
+                // 受信ツールバーの開始/停止ボタンを非表示にする
+                udpReceiverToolStrip.ButtonVisible = false;
+            }
         }
         private UdpReceiverToolStrip udpReceiverToolStrip = null;
 
@@ -119,7 +125,7 @@ namespace IpSocketToolBar
         public bool Open()
         {
             this.Invoke((Action)(() => {
-                buttonOpen.PerformClick();
+                this.buttonOpen_Click(this, EventArgs.Empty);
             }));
             return socket.IsOpen;
         }
@@ -130,7 +136,7 @@ namespace IpSocketToolBar
         public void Close()
         {
             this.Invoke((Action)(() => {
-                buttonClose.PerformClick();
+                this.buttonClose_Click(this, EventArgs.Empty);
             }));
         }
         
@@ -155,8 +161,7 @@ namespace IpSocketToolBar
             // ペアになるUDP受信のツールバーがある場合
             if(udpReceiverToolStrip != null)
             {
-                udpReceiverToolStrip.Open();
-                if (!udpReceiverToolStrip.Socket.IsOpen) return;
+                if(!udpReceiverToolStrip.Open()) return;
                 this.Socket.FixedLocalPort = udpReceiverToolStrip.Socket.LocalPort;
             }
 

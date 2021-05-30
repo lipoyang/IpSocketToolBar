@@ -165,7 +165,7 @@ namespace IpSocketToolBar
         public bool Open()
         {
             this.Invoke((Action)(() => {
-                buttonOpen.PerformClick();
+                this.buttonOpen_Click(this, EventArgs.Empty);
             }));
             return socket.IsOpen;
         }
@@ -176,7 +176,7 @@ namespace IpSocketToolBar
         public void Close()
         {
             this.Invoke((Action)(() => {
-                buttonClose.PerformClick();
+                this.buttonClose_Click(this, EventArgs.Empty);
             }));
         }
 
