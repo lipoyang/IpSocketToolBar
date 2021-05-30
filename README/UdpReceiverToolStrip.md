@@ -1,7 +1,7 @@
 # UdpReceiverToolStrip
 UDP受信器のツールバーです。ToolStripクラスを継承しています。
 
-![図](img.png)
+![図](README/udp_receiver.png)
 
 ## イベント
 |  名前  |  説明  |

@@ -1,7 +1,9 @@
 # IpSocketToolBar
 IPソケット通信ツールバー (Windows Forms) とソケット通信のためのクラスライブラリ
 
-![図](README/img.png)
+![図](README/tcp_server.png)
+
+![図](README/tcp_client.png)
 
 ## クラス
 
