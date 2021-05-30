@@ -133,7 +133,6 @@ namespace TestApp
             // 
             // udpReceiverToolStrip
             // 
-            this.udpReceiverToolStrip.ButtonVisible = false;
             this.udpReceiverToolStrip.Location = new System.Drawing.Point(0, 25);
             this.udpReceiverToolStrip.Name = "udpReceiverToolStrip";
             this.udpReceiverToolStrip.Size = new System.Drawing.Size(464, 25);
@@ -148,7 +147,7 @@ namespace TestApp
             this.udpSenderToolStrip.Size = new System.Drawing.Size(464, 25);
             this.udpSenderToolStrip.TabIndex = 7;
             this.udpSenderToolStrip.Text = "udpSenderToolStrip1";
-            this.udpSenderToolStrip.UdpReceiverToolStrip = this.udpReceiverToolStrip;
+            this.udpSenderToolStrip.UdpReceiverBar = this.udpReceiverToolStrip;
             this.udpSenderToolStrip.Opened += new System.EventHandler(this.udpSenderToolStrip_Opened);
             // 
             // FormUdpSender2

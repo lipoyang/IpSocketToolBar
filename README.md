@@ -5,15 +5,22 @@ IPソケット通信ツールバー (Windows Forms) とソケット通信のた�
 
 ![図](README/tcp_client.png)
 
-## クラス
+## ツールバー類のクラス
+
+ToolStripクラスを継承しています。 
 
 |  名前  |  説明  |
 | ---- | ---- |
-| [TcpClientToolStrip](README/TcpClientToolStrip.md)  |  TCPクライアントのツールバーです。ToolStripクラスを継承しています。 |
-| [TcpServerToolStrip](README/TcpServerToolStrip.md)  |  TCPクライアントのツールバーです。ToolStripクラスを継承しています。  |
-| [UdpSenderToolStrip](README/UdpSenderToolStrip.md)  |  UDP送信器のツールバーです。ToolStripクラスを継承しています。  |
-| [UdpReceiverToolStrip](README/UdpReceiverToolStrip.md)  |  UDP受信器のツールバーです。ToolStripクラスを継承しています。  |
-| [StatusToolStrip](README/StatusToolStrip.md)  |  TCP通信のステータス表示のツールバーです。ToolStripクラスを継承しています。  |
+| [TcpClientToolStrip](README/TcpClientToolStrip.md)  |  TCPクライアントのツールバー |
+| [TcpServerToolStrip](README/TcpServerToolStrip.md)  |  TCPサーバのツールバー |
+| [UdpSenderToolStrip](README/UdpSenderToolStrip.md)  |  UDP送信器のツールバー |
+| [UdpReceiverToolStrip](README/UdpReceiverToolStrip.md)  |  UDP受信器のツールバー |
+| [StatusToolStrip](README/StatusToolStrip.md)  |  TCP通信のステータス表示のツールバー |
+
+## ソケット通信のためのクラス
+
+|  名前  |  説明  |
+| ---- | ---- |
 | [TcpClientSocket](README/TcpClientSocket.md)  | TCPクライアントソケット |
 | [TcpServerSocket](README/TcpServerSocket.md)  | TCPサーバーソケット |
 | [UdpSenderSocket](README/UdpSenderSocket.md)  | UDP送信器ソケット |
@@ -21,8 +28,6 @@ IPソケット通信ツールバー (Windows Forms) とソケット通信のた�
 | [PacketPayload](README/PacketPayload.md)  | IPパケットのペイロード |
 
 ※ TCP送受信はストリームではなくパケット単位で一つの電文として扱うことを想定した仕様です。
-
-<br>
 
 ## 列挙型
 

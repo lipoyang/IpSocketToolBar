@@ -6,20 +6,22 @@ TCPサーバのツールバーです。ToolStripクラスを継承していま�
 ## イベント
 |  名前  |  説明  |
 | ---- | ---- |
-|  Opened  |  シリアルポートが開いた時  |
-|  Closed  |  シリアルポートが閉じた時  |
-|  Disconnected  | デバイスが切断された時 |
-|  Received  |  データを受信した時  |
+|  Opened  |  ソケットを開いたとき  |
+|  Closed  |  ソケットを閉じたとき  |
+|  Connected  | クライアントと接続したとき |
+|  Disconnected  | クライアントと切断したとき |
+|  Received  | パケットを受信した時  |
 
 ## プロパティ
 |  名前  |  説明  |
 | ---- | ---- |
-|  Scoket  |  ソケット (TcpClientSocketクラスのオブジェクト)  |
+|  Scoket  |  ソケット (TcpSeverSocketクラスのオブジェクト)  |
+|  StatusBar  |  ステータスを表示させるツールバー (StatusToolStripクラスのオブジェクト)  |
 
 ## メソッド
 |  名前  |  説明  |
 | ---- | ---- |
-|  Begin(iniFileName, section)  |  初期化処理。<br> フォームの開始時(Loadイベント)に呼んでください。<br> iniFileName: 設定INIファイルのパス(省略可)<br>section: 設定INIファイルのセクション名(省略可) |
+|  Begin(iniFileName, section, port)  |  初期化処理。<br> フォームの開始時(Loadイベント)に呼んでください。<br> iniFileName: 設定INIファイルのパス(省略可)<br>section: 設定INIファイルのセクション名(省略可)<br>port: 既定のポート番号(省略可) |
 |  End()  |  終了処理。<br> フォームの終了時(FormClosingイベント)に呼んでください。 |
-|  Open()  |  シリアルポートを開きます。接続ボタンを押すのと同じ動作です。 |
-|  Close()  |  シリアルポートを閉じます。切断ボタンを押すのと同じ動作です。 |
+|  Open()  |  ソケットを開きます。開始ボタンを押すのと同じ動作です。 |
+|  Close()  |  ソケットを閉じます。停止ボタンを押すのと同じ動作です。 |

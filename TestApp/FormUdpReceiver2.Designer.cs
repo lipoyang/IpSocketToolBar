@@ -109,7 +109,6 @@ namespace TestApp
             // 
             // udpReceiverToolStrip
             // 
-            this.udpReceiverToolStrip.ButtonVisible = true;
             this.udpReceiverToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.udpReceiverToolStrip.Location = new System.Drawing.Point(0, 0);
             this.udpReceiverToolStrip.Name = "udpReceiverToolStrip";
