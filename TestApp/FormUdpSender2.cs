@@ -93,8 +93,8 @@ namespace TestApp
             }
         }
 
-        // シリアルポートが開いたとき
-        private void serialPortToolStrip_Opened(object sender, EventArgs e)
+        // ソケットを開いたとき
+        private void udpSenderToolStrip_Opened(object sender, EventArgs e)
         {
             sendPackNum = 0;
             recvAckNum = 0;

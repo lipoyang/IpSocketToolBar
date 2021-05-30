@@ -109,12 +109,14 @@ namespace TestApp
             // 
             // udpReceiverToolStrip
             // 
+            this.udpReceiverToolStrip.ButtonVisible = true;
             this.udpReceiverToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.udpReceiverToolStrip.Location = new System.Drawing.Point(0, 0);
             this.udpReceiverToolStrip.Name = "udpReceiverToolStrip";
             this.udpReceiverToolStrip.Size = new System.Drawing.Size(464, 25);
             this.udpReceiverToolStrip.TabIndex = 7;
             this.udpReceiverToolStrip.Text = "udpReceiverToolStrip1";
+            this.udpReceiverToolStrip.Opened += new System.EventHandler(this.udpReceiverToolStrip_Opened);
             this.udpReceiverToolStrip.Received += new System.EventHandler(this.udpReceiverToolStrip_Received);
             // 
             // FormUdpReceiver2

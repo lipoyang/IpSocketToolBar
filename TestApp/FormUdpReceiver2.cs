@@ -54,8 +54,8 @@ namespace TestApp
             if (socketS.IsOpen) socketS.Close();
         }
 
-        // シリアルポートが開いたとき
-        private void serialPortToolStrip_Opened(object sender, EventArgs e)
+        // ソケットを開いたとき
+        private void udpReceiverToolStrip_Opened(object sender, EventArgs e)
         {
             recvPackNum = 0;
             sendAckNum = 0;
