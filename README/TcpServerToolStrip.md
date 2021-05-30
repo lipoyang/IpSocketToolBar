@@ -1,7 +1,7 @@
 # TcpServerSocket
 TCPサーバのツールバーです。ToolStripクラスを継承しています。
 
-![図](README/tcp_server.png)
+![図](tcp_server.png)
 
 ## イベント
 |  名前  |  説明  |

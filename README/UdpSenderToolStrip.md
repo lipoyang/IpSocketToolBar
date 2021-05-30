@@ -1,7 +1,7 @@
 # UdpSenderToolStrip
 UDP送信器のツールバーです。ToolStripクラスを継承しています。
 
-![図](README/udp_sender.png)
+![図](udp_sender.png)
 
 ## イベント
 |  名前  |  説明  |

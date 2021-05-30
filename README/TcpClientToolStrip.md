@@ -1,7 +1,7 @@
 # TcpClientToolStrip
 TCPクライアントのツールバーです。ToolStripクラスを継承しています。
 
-![図](README/tcp_client.png)
+![図](tcp_client.png)
 
 ## イベント
 |  名前  |  説明  |
