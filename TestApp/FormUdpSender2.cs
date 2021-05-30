@@ -72,6 +72,7 @@ namespace TestApp
 
             // フォームのFormClosingイベントで終了処理を呼ぶ
             udpSenderToolStrip.End();
+            udpReceiverToolStrip.End();
         }
 
         // 対話通信スレッドの関数

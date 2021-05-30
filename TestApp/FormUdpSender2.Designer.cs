@@ -29,7 +29,6 @@ namespace TestApp
         /// </summary>
         private void InitializeComponent()
         {
-            this.udpSenderToolStrip = new IpSocketToolBar.UdpSenderToolStrip();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -41,17 +40,9 @@ namespace TestApp
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
             this.udpReceiverToolStrip = new IpSocketToolBar.UdpReceiverToolStrip();
+            this.udpSenderToolStrip = new IpSocketToolBar.UdpSenderToolStrip();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
-            // 
-            // udpSenderToolStrip
-            // 
-            this.udpSenderToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.udpSenderToolStrip.Location = new System.Drawing.Point(0, 0);
-            this.udpSenderToolStrip.Name = "udpSenderToolStrip";
-            this.udpSenderToolStrip.Size = new System.Drawing.Size(464, 25);
-            this.udpSenderToolStrip.TabIndex = 7;
-            this.udpSenderToolStrip.Text = "udpSenderToolStrip1";
             // 
             // label5
             // 
@@ -147,6 +138,16 @@ namespace TestApp
             this.udpReceiverToolStrip.Size = new System.Drawing.Size(464, 25);
             this.udpReceiverToolStrip.TabIndex = 33;
             this.udpReceiverToolStrip.Text = "udpReceiverToolStrip1";
+            // 
+            // udpSenderToolStrip
+            // 
+            this.udpSenderToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.udpSenderToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.udpSenderToolStrip.Name = "udpSenderToolStrip";
+            this.udpSenderToolStrip.Size = new System.Drawing.Size(464, 25);
+            this.udpSenderToolStrip.TabIndex = 7;
+            this.udpSenderToolStrip.Text = "udpSenderToolStrip1";
+            this.udpSenderToolStrip.UdpReceiverToolStrip = this.udpReceiverToolStrip;
             // 
             // FormUdpSender2
             // 

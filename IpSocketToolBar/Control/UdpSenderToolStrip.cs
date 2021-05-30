@@ -44,10 +44,22 @@ namespace IpSocketToolBar
         /// </summary>
         public UdpSenderSocket Socket { get => socket; }
 
+        /// <summary>
+        /// ペアになるUDP受信のツールバー
+        /// </summary>
+        [Browsable(true)]
+        [Category("拡張機能")]
+        [Description("ペアになるUDP受信のツールバー")]
+        public UdpReceiverToolStrip UdpReceiverToolStrip {
+            get => udpReceiverToolStrip;
+            set => udpReceiverToolStrip = value;
+        }
+        private UdpReceiverToolStrip udpReceiverToolStrip = null;
+
         #endregion
 
         #region 公開メソッド
-        
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -140,6 +152,14 @@ namespace IpSocketToolBar
         // 開始ボタンクリック時の処理
         private void buttonOpen_Click(object sender, EventArgs e)
         {
+            // ペアになるUDP受信のツールバーがある場合
+            if(udpReceiverToolStrip != null)
+            {
+                udpReceiverToolStrip.Open();
+                if (!udpReceiverToolStrip.Socket.IsOpen) return;
+                this.Socket.FixedLocalPort = udpReceiverToolStrip.Socket.LocalPort;
+            }
+
             // IPアドレス/ホスト名のチェック
             IPAddress ipAddress;
             string ipAddressStr = textIpAddress.Text;
@@ -190,6 +210,12 @@ namespace IpSocketToolBar
         // 停止ボタンクリック時の処理
         private void buttonClose_Click(object sender, EventArgs e)
         {
+            // ペアになるUDP受信のツールバーがある場合
+            if (udpReceiverToolStrip != null)
+            {
+                udpReceiverToolStrip.Close();
+            }
+
             // ポートを閉じる
             socket.Close();
 
