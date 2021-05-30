@@ -44,8 +44,8 @@ namespace TestApp
         private void Form_Load(object sender, EventArgs e)
         {
             // フォームのLoadイベントで開始処理を呼ぶ
-            udpSenderToolStrip.Begin(@"SETTING.INI", this.Text + "S");
-            udpReceiverToolStrip.Begin(@"SETTING.INI", this.Text + "R");
+            udpSenderToolStrip.Begin(@"SETTING.INI", this.Text + "S", 1234);
+            udpReceiverToolStrip.Begin(@"SETTING.INI", this.Text + "R", 2345);
 
             // ソケット
             socketS = udpSenderToolStrip.Socket;
