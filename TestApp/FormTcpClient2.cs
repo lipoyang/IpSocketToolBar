@@ -100,8 +100,10 @@ namespace TestApp
             updateCounter();
 
             // 送信データのキューに入れてシグナル
-            sendQueue.Enqueue(trackBar.Value);
-            sendSignal.Set();
+            this.BeginInvoke((Action)(() => {
+                sendQueue.Enqueue(trackBar.Value);
+                sendSignal.Set();
+            }));
         }
 
         // トラックバーの値が変化したとき

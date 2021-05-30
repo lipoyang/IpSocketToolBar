@@ -17,7 +17,8 @@ IPソケット通信ツールバー (Windows Forms) とソケット通信のた�
 | [UdpSenderSocket](README/UdpSenderSocket.md)  | UDP送信器ソケット |
 | [UdpReceiverSocket](README/UdpReceiverSocket.md)  | UDP受信器ソケット |
 | [PacketPayload](README/PacketPayload.md)  | IPパケットのペイロード |
-| [CRC16](README/CRC16.md)  |  CRC-16計算機  |
+
+※ TCP送受信はストリームではなくパケット単位で一つの電文として扱うことを想定した仕様です。
 
 <br>
 
