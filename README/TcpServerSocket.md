@@ -35,7 +35,7 @@ TCPサーバの送受信器クラスです。
 |  Disconnect()  |  クライアントとの接続を切断します。(サーバは停止しません。) |
 |  Send(byte[] data) | バイト列データを送信します。 |
 |  Send(string stringData) | 文字列データを送信します。 |
-|  Send(PacketPayload packet) | パケットデータを送信します。 |
+|  Send(PacketData packet) | パケットデータを送信します。 |
 |  GetBytes() | 受信したバイト列データを取得します。 |
 |  GetString() | 受信した文字列データを取得します。 |
 |  GetPacket() | 受信したパケットデータを取得します。 |

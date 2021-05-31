@@ -4,9 +4,9 @@
 ## コンストラクタ
 |  名前  |  説明  |
 | ---- | ---- |
-| PacketPayload(data, endian) | data: パケットデータのバイト配列データ<br>endian: エンディアン指定(省略可) |
-| PacketPayload(size, endian) | size: パケットデータの全バイト数<br>endian: エンディアン指定(省略可)|
-| PacketPayload(stringData) | stringData: 文字列データ|
+| PacketData(data, endian) | data: パケットデータのバイト配列データ<br>endian: エンディアン指定(省略可) |
+| PacketData(size, endian) | size: パケットデータの全バイト数<br>endian: エンディアン指定(省略可)|
+| PacketData(stringData) | stringData: 文字列データ|
 
 ## フィールド
 |  名前  |  説明  |

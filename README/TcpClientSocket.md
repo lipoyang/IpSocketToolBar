@@ -34,7 +34,7 @@ TCPクライアントの送受信器クラスです。
 |  Close()  |  ソケットを閉じます。(サーバとの接続を切断し、クライアントを停止します。) |
 |  Send(byte[] data) | バイト列データを送信します。 |
 |  Send(string stringData) | 文字列データを送信します。 |
-|  Send(PacketPayload packet) | パケットデータを送信します。 |
+|  Send(PacketData packet) | パケットデータを送信します。 |
 |  GetBytes() | 受信したバイト列データを取得します。 |
 |  GetString() | 受信した文字列データを取得します。 |
 |  GetPacket() | 受信したパケットデータを取得します。 |
