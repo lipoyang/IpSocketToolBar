@@ -1,17 +1,17 @@
-# PacketPayload
-パケットのペイロードを表します。  
+# PacketData
+パケットデータを表します。  
 
 ## コンストラクタ
 |  名前  |  説明  |
 | ---- | ---- |
-| PacketPayload(data, endian) | data: ペイロードのバイト配列データ<br>endian: エンディアン指定(省略可) |
-| PacketPayload(size, endian) | size: ペイロードの全バイト数<br>endian: エンディアン指定(省略可)|
+| PacketPayload(data, endian) | data: パケットデータのバイト配列データ<br>endian: エンディアン指定(省略可) |
+| PacketPayload(size, endian) | size: パケットデータの全バイト数<br>endian: エンディアン指定(省略可)|
 | PacketPayload(stringData) | stringData: 文字列データ|
 
 ## フィールド
 |  名前  |  説明  |
 | ---- | ---- |
-| Data |  ペイロードのバイト配列データ |
+| Data |  パケットデータのバイト配列データ |
 
 ## メソッド
 

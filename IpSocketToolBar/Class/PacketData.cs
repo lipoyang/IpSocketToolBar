@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace IpSocketToolBar
 {
     /// <summary>
-    /// パケットのペイロード
+    /// パケットデータ
     /// </summary>
-    public class PacketPayload
+    public class PacketData
     {
         #region 公開フィールド
 
         /// <summary>
-        /// ペイロードのバイト列
+        /// パケットデータのバイト列
         /// </summary>
         public byte[] Data;
 
@@ -27,7 +27,7 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="data">バイト列</param>
         /// <param name="endian">エンディアン</param>
-        public PacketPayload(byte[] data, Endian endian = Endian.Big)
+        public PacketData(byte[] data, Endian endian = Endian.Big)
         {
             this.Data = data;
             this.Endian = endian;
@@ -38,7 +38,7 @@ namespace IpSocketToolBar
         /// </summary>
         /// <param name="size">バイト数</param>
         /// <param name="endian">エンディアン</param>
-        public PacketPayload(int size, Endian endian = Endian.Big)
+        public PacketData(int size, Endian endian = Endian.Big)
         {
             this.Data = new byte[size];
         }
@@ -47,7 +47,7 @@ namespace IpSocketToolBar
         /// コンストラクタ
         /// </summary>
         /// <param name="stringData">文字列</param>
-        public PacketPayload(string stringData)
+        public PacketData(string stringData)
         {
             this.Data = Encoding.ASCII.GetBytes(stringData);
         }

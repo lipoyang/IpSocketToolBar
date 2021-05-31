@@ -25,7 +25,7 @@ ToolStripクラスを継承しています。
 | [TcpServerSocket](README/TcpServerSocket.md)  | TCPサーバーソケット |
 | [UdpSenderSocket](README/UdpSenderSocket.md)  | UDP送信器ソケット |
 | [UdpReceiverSocket](README/UdpReceiverSocket.md)  | UDP受信器ソケット |
-| [PacketPayload](README/PacketPayload.md)  | IPパケットのペイロード |
+| [PacketData](README/PacketData.md)  | パケットデータ |
 
 ※ TCP送受信はストリームではなくパケット単位で一つの電文として扱うことを想定した仕様です。
 
@@ -35,4 +35,5 @@ ToolStripクラスを継承しています。
 | ---- | ---- |
 |  AsciiCode  |  アスキー制御キャラクタコード  |
 |  Endian  |  ビッグエンディアンかリトルエンディアンか  |
+|  DisconnectReason  |  切断した理由  |
 

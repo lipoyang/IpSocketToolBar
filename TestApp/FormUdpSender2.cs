@@ -122,7 +122,7 @@ namespace TestApp
         private void sendPacketWaitResponse(int val)
         {
             // パケット作成
-            var packet = new PacketPayload(3);
+            var packet = new PacketData(3);
             packet.SetChar(0, 'D');
             packet.SetHex(1, 2, val);
 

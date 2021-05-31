@@ -47,7 +47,7 @@
     <Compile Include="Control\StatusToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Class\PacketPayload.cs" />
+    <Compile Include="Class\PacketData.cs" />
     <Compile Include="Control\TcpClientToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>

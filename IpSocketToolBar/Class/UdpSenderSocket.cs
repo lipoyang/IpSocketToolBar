@@ -123,8 +123,8 @@ namespace IpSocketToolBar
         /// <summary>
         /// データを送信する
         /// </summary>
-        /// <param name="packet">パケットのペイロード</param>
-        public void Send(PacketPayload packet)
+        /// <param name="packet">パケットデータ</param>
+        public void Send(PacketData packet)
         {
             Send(packet.Data);
         }

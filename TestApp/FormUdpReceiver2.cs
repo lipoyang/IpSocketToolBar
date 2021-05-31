@@ -67,7 +67,7 @@ namespace TestApp
         private void sendAck()
         {
             // パケット作成
-            var packet = new PacketPayload(1);
+            var packet = new PacketData(1);
             packet.SetByte(0, AsciiCode.ACK);
             // パケット送信
             socketS.Send(packet);
@@ -79,7 +79,7 @@ namespace TestApp
         private void sendNak()
         {
             // パケット作成
-            var packet = new PacketPayload(1);
+            var packet = new PacketData(1);
             packet.SetByte(0, AsciiCode.NAK);
             // パケット送信
             socketS.Send(packet);

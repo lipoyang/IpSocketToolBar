@@ -35,13 +35,13 @@ TCPサーバの送受信器クラスです。
 |  Disconnect()  |  クライアントとの接続を切断します。(サーバは停止しません。) |
 |  Send(byte[] data) | バイト列データを送信します。 |
 |  Send(string stringData) | 文字列データを送信します。 |
-|  Send(PacketPayload packet) | パケットを送信します。 |
+|  Send(PacketPayload packet) | パケットデータを送信します。 |
 |  GetBytes() | 受信したバイト列データを取得します。 |
 |  GetString() | 受信した文字列データを取得します。 |
-|  GetPacket() | 受信したパケットのペイロードを取得します。 |
+|  GetPacket() | 受信したパケットデータを取得します。 |
 |  WaitBytes() | バイト列データの受信を待ちます。 |
 |  WaitString() | 文字列データの受信を待ちます。 |
-|  WaitPacket() | パケットの受信を待ちます。 |
+|  WaitPacket() | パケットデータの受信を待ちます。 |
 
 ## 注意点
 非同期処理APIと同期処理APIの利用は排他です。

@@ -22,4 +22,4 @@ UDP送信器クラスです。
 |  Close()  |  ソケットを閉じます。(送信器を停止します。) |
 |  Send(byte[] data) | バイト列データを送信します。 |
 |  Send(string stringData) | 文字列データを送信します。 |
-|  Send(PacketPayload packet) | パケットを送信します。 |
+|  Send(PacketPayload packet) | パケットデータを送信します。 |

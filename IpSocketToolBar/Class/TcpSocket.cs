@@ -86,8 +86,8 @@ namespace IpSocketToolBar
         /// <summary>
         /// データを送信する
         /// </summary>
-        /// <param name="packet">パケットのペイロード</param>
-        public void Send(PacketPayload packet)
+        /// <param name="packet">パケットデータ</param>
+        public void Send(PacketData packet)
         {
             Send(packet.Data);
         }
@@ -121,16 +121,16 @@ namespace IpSocketToolBar
             }
         }
         /// <summary>
-        /// 受信したパケットのペイロードを取得する
+        /// 受信したパケットデータを取得する
         /// </summary>
-        /// <returns>パケットのペイロード</returns>
-        public PacketPayload GetPacket()
+        /// <returns>パケットデータ</returns>
+        public PacketData GetPacket()
         {
             if (receivedPackets.Count == 0) return null;
             byte[] data = receivedPackets.Dequeue();
             if (data != null)
             {
-                PacketPayload packet = new PacketPayload(data);
+                PacketData packet = new PacketData(data);
                 return packet;
             }
             else
@@ -192,13 +192,13 @@ namespace IpSocketToolBar
         /// パケットの受信を待つ
         /// </summary>
         /// <param name="timeout">タイムアウト時間[ミリ秒]</param>
-        /// <returns>パケットのペイロード</returns>
-        public PacketPayload WaitPacket(int timeout)
+        /// <returns>パケットデータ</returns>
+        public PacketData WaitPacket(int timeout)
         {
             byte[] data = WaitBytes(timeout);
             if(data != null)
             {
-                PacketPayload packet = new PacketPayload(data);
+                PacketData packet = new PacketData(data);
                 return packet;
             }
             else
